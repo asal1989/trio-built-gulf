@@ -9,9 +9,9 @@ import MobileMenu from "./MobileMenu";
 import { company, navLinks } from "@/lib/site";
 
 /**
- * The bar is set in the logo's own stone grey so the supplied artwork can be
- * shown unaltered. It stays solid at every scroll position — a transparent bar
- * would put the navy logo over the dark hero, where it would disappear.
+ * The bar is white so the navy logo reads at full contrast and the dark hero
+ * below it stays clearly separated. It stays solid at every scroll position —
+ * a transparent bar would drop the navy logo onto the hero photograph.
  */
 export default function Navbar() {
   const pathname = usePathname();
@@ -70,7 +70,7 @@ export default function Navbar() {
       </div>
 
       <header
-        className={`fixed inset-x-0 z-50 border-b border-navy/10 bg-stone transition-all duration-500 [transition-timing-function:var(--ease-brand)] ${
+        className={`fixed inset-x-0 z-50 border-b border-line bg-white transition-all duration-500 [transition-timing-function:var(--ease-brand)] ${
           scrolled
             ? "top-0 shadow-[0_10px_40px_-24px_rgba(10,46,80,0.45)]"
             : "top-0 lg:top-10"

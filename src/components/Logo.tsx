@@ -5,24 +5,26 @@ import { company, logoAssets } from "@/lib/site";
 /**
  * TRIO BUILT GULF logo.
  *
- * The supplied artwork is used exactly as given — navy and teal, nothing
- * recoloured. It is drawn for a light ground, so the header, footer and mobile
- * menu are set in the logo's own stone grey rather than navy.
+ * Both artwork files carry an alpha channel, so the logo sits on any ground.
+ * `onLight` is the supplied navy-and-teal original for the white header;
+ * `onDark` is the white-and-teal colourway for the navy footer.
  *
  * The header and the footer render it at the same size deliberately.
  */
 export default function Logo({
   href = "/",
+  variant = "onLight",
   className = "",
 }: {
   href?: string | null;
+  variant?: "onLight" | "onDark";
   className?: string;
 }) {
   const { full } = logoAssets;
 
   const content = (
     <Image
-      src={full.onLight}
+      src={variant === "onDark" ? full.onDark : full.onLight}
       alt={company.legalName}
       width={full.width}
       height={full.height}

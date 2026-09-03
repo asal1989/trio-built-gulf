@@ -17,8 +17,7 @@
   --color-teal-700: #2a6a5c;  /* darker, for hover states */
   --color-teal-300: #4cae9a;  /* lighter tint, for teal text on navy */
 
-  /* The logo artwork's own ground — used for the header, footer and menu so
-     the logo can be shown exactly as supplied, with no recolouring. */
+  /* Retained from the logo artwork ground; kept for incidental surfaces. */
   --color-stone: #c9c9c1;
   --color-stone-dark: #b9b9b0;
 

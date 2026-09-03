@@ -7,8 +7,8 @@ import Logo from "./Logo";
 import { company, navLinks } from "@/lib/site";
 
 /**
- * Set in the logo's stone grey, matching the header, so the supplied artwork
- * appears unaltered here too.
+ * White, matching the header, so the navy logo and links read at full
+ * contrast against the panel.
  */
 export default function MobileMenu({
   open,
@@ -54,7 +54,7 @@ export default function MobileMenu({
       />
 
       <div
-        className={`absolute inset-y-0 right-0 flex w-full max-w-[420px] flex-col bg-stone shadow-2xl transition-transform duration-500 [transition-timing-function:var(--ease-brand)] ${
+        className={`absolute inset-y-0 right-0 flex w-full max-w-[420px] flex-col bg-white shadow-2xl transition-transform duration-500 [transition-timing-function:var(--ease-brand)] ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
