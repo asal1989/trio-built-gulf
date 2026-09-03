@@ -39,8 +39,9 @@ export function validateEnquiry(values: EnquiryValues): EnquiryErrors {
     errors.email = "Please enter a valid email address.";
   }
 
-  // Optional, but must look like a number when supplied.
-  if (values.phone.trim()) {
+  if (!values.phone.trim()) {
+    errors.phone = "Please enter your phone number.";
+  } else {
     const digits = values.phone.replace(/\D/g, "");
     if (!PHONE_PATTERN.test(values.phone.trim()) || digits.length < 7) {
       errors.phone = "Please enter a valid phone number.";

@@ -173,19 +173,69 @@ export default function ContactPage() {
               </Reveal>
             </div>
 
-            {/* Right — enquiry form */}
-            <div id="enquiry" className="scroll-mt-28 lg:col-span-7">
+            {/* Right — reassurance panel */}
+            <div className="lg:col-span-7">
               <Reveal delay={80}>
-                <div className="mb-8">
-                  <span className="eyebrow text-teal-700">Enquiry</span>
-                  <h2 className="mt-6 text-[clamp(1.6rem,3.4vw,2.5rem)] font-extrabold uppercase leading-[1.05] text-navy">
-                    Send an <span className="text-teal-700">enquiry</span>
-                  </h2>
+                <div className="relative h-full min-h-[320px] overflow-hidden rounded-2xl">
+                  <Image
+                    src="/images/contact-plans.jpg"
+                    alt="Technical drawings and plans on a desk"
+                    fill
+                    sizes="(min-width: 1024px) 55vw, 100vw"
+                    className="object-cover"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-[linear-gradient(150deg,rgba(4,18,31,0.88)_0%,rgba(7,31,54,0.7)_100%)]"
+                  />
+                  <div className="relative flex h-full flex-col justify-end p-8 sm:p-10">
+                    <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
+                      Dubai &bull; United Arab Emirates
+                    </p>
+                    <h3 className="mt-4 max-w-[18ch] text-2xl font-bold leading-tight text-white sm:text-3xl">
+                      Tell us the site, the scope and the timing.
+                    </h3>
+                    <p className="mt-4 max-w-md text-sm leading-relaxed text-white/70">
+                      We will come back with the right discipline and a clear
+                      next step, whether the work is a single trade or a
+                      coordinated fit-out.
+                    </p>
+                  </div>
                 </div>
-                <ContactForm />
               </Reveal>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Enquiry */}
+      <section
+        id="enquiry"
+        aria-labelledby="enquiry-heading"
+        className="scroll-mt-28 bg-mist py-20 sm:py-24 lg:py-28"
+      >
+        <div className="shell">
+          <Reveal>
+            <span className="eyebrow text-teal-700">Enquiry</span>
+            <h2
+              id="enquiry-heading"
+              className="mt-6 text-[clamp(1.75rem,4vw,3rem)] font-extrabold leading-[1.05] text-navy"
+            >
+              Send an <span className="text-teal-700">Enquiry</span>
+            </h2>
+            <span
+              aria-hidden="true"
+              className="mt-5 block h-1 w-16 rounded-full bg-gold"
+            />
+            <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-navy/65">
+              Have a question or need a custom solution? Fill out the form and
+              our team will get back to you shortly.
+            </p>
+          </Reveal>
+
+          <Reveal delay={100} className="mt-12">
+            <ContactForm />
+          </Reveal>
         </div>
       </section>
     </>
