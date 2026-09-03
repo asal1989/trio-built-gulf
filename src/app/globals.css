@@ -1,26 +1,184 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   TRIO BUILT GULF — Brand tokens (derived from the logo)
+   ============================================================ */
+@theme {
+  /* ------------------------------------------------------------------
+     Brand palette — measured from the official vector logo
+     ("TRIO BUILT GULF TECHNICAL SERVICES LLC logo.pdf") and cross-checked
+     against the printed business cards. Both agree.
+     ------------------------------------------------------------------ */
+  --color-navy: #0a2e50;      /* logo navy */
+  --color-navy-900: #071f36;  /* darker section ground */
+  --color-navy-950: #04121f;  /* deepest ground */
+
+  --color-teal: #348171;      /* logo teal — white text on it passes AA */
+  --color-teal-700: #2a6a5c;  /* darker, for hover states */
+  --color-teal-300: #4cae9a;  /* lighter tint, for teal text on navy */
+
+  /* The logo artwork's own ground — used for the header, footer and menu so
+     the logo can be shown exactly as supplied, with no recolouring. */
+  --color-stone: #c9c9c1;
+  --color-stone-dark: #b9b9b0;
+
+  --color-champagne: #d8d9a5;
+  --color-mist: #f5f7f8;
+  --color-line: #dfe5e9;
+
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 12px;
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* offset for the sticky navbar when jumping to #anchors */
+    scroll-padding-top: 170px;
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: #ffffff;
+    color: var(--color-navy-900);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: var(--color-teal);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Section shell — one consistent horizontal rhythm sitewide */
+  .shell {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px)  { .shell { padding-inline: 40px; } }
+  @media (min-width: 1280px) { .shell { padding-inline: 72px; } }
+
+  /* Eyebrow / kicker label */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background-color: currentColor;
+    opacity: 0.55;
+  }
+
+  /* Fine technical grid — the "engineering paper" texture */
+  .tech-grid {
+    background-image:
+      linear-gradient(to right, currentColor 1px, transparent 1px),
+      linear-gradient(to bottom, currentColor 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  /* Cropped, colour-graded photography treatment */
+  .plate {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-navy-900);
+  }
+  .plate img {
+    transition: transform 900ms var(--ease-brand);
+    will-change: transform;
+  }
+  .plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(11, 42, 80, 0.42) 0%,
+      rgba(7, 29, 56, 0.14) 45%,
+      rgba(21, 159, 152, 0.16) 100%
+    );
+    pointer-events: none;
+  }
+  .group:hover .plate img,
+  .plate:hover img { transform: scale(1.06); }
+}
+
+@layer utilities {
+  /* Scroll reveal — driven by the <Reveal /> observer */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 900ms var(--ease-brand),
+      transform 900ms var(--ease-brand);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  /* Slow drift for the hero's technical line work */
+  @keyframes trio-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-72px, -72px, 0); }
+  }
+  .animate-drift { animation: trio-drift 24s linear infinite; }
+
+  @keyframes trio-scan {
+    0%   { transform: translateY(-100%); opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { transform: translateY(1100%); opacity: 0; }
+  }
+  .animate-scan { animation: trio-scan 9s var(--ease-brand) infinite; }
+
+  @keyframes trio-fade-up {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .animate-fade-up {
+    animation: trio-fade-up 1s var(--ease-brand) both;
+  }
 }
