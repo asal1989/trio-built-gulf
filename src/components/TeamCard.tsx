@@ -1,4 +1,5 @@
 import { Download, Mail, Phone } from "lucide-react";
+import { asset } from "@/lib/asset";
 import type { TeamMember } from "@/lib/site";
 
 /**
@@ -55,7 +56,7 @@ export default function TeamCard({ member }: { member: TeamMember }) {
 
         {member.vcard ? (
           <a
-            href={member.vcard}
+            href={asset(member.vcard)}
             download
             className="mt-5 inline-flex items-center gap-2 border-b border-white/25 pb-1.5 font-display text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:border-teal hover:text-teal-300"
           >
