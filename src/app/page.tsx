@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 
 import Hero from "@/components/Hero";
 import SectionHeader from "@/components/SectionHeader";
@@ -112,22 +112,23 @@ export default function HomePage() {
       <section
         id="services"
         aria-labelledby="services-heading"
-        className="border-y border-line bg-mist py-24 sm:py-28 lg:py-36"
+        className="relative border-y border-white/10 bg-navy-950 py-24 sm:py-28 lg:py-36"
       >
         <div className="shell">
           <SectionHeader
             id="services-heading"
             eyebrow="02 — What we do"
+            tone="dark"
             title={
               <>
-                Our core <span className="text-teal-700">services</span>
+                Our core <span className="text-gold">services</span>
               </>
             }
             subtitle="Complete technical solutions for modern buildings."
             action={
               <Link
                 href="/contact#enquiry"
-                className="group inline-flex items-center gap-2 border-b-2 border-navy/15 pb-2 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-navy transition-colors duration-300 hover:border-teal hover:text-teal-700"
+                className="group inline-flex items-center gap-2 border-b-2 border-white/20 pb-2 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:border-gold hover:text-gold"
               >
                 Discuss your requirement
                 <ArrowUpRight
@@ -139,41 +140,49 @@ export default function HomePage() {
             }
           />
 
-          <ul className="mt-16 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service, i) => (
-              <Reveal
-                as="li"
-                key={service.slug}
-                delay={(i % 3) * 90}
-                className="bg-white"
-              >
+              <Reveal as="li" key={service.slug} delay={(i % 3) * 90}>
                 <ServiceCard service={service} index={i} />
               </Reveal>
             ))}
 
             {/* Closing tile — keeps the grid square and adds a conversion route */}
-            <Reveal as="li" delay={180} className="bg-navy">
-              <div className="flex h-full flex-col justify-between p-7 sm:p-8">
-                <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-teal-300">
-                  Something else?
-                </p>
-                <div className="mt-10">
-                  <h3 className="text-lg font-bold leading-snug text-white">
+            <Reveal as="li" delay={180}>
+              <div className="relative flex h-full min-h-[220px] flex-col justify-center overflow-hidden rounded-xl p-7 sm:p-8">
+                <Image
+                  src="/images/about-towers.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[linear-gradient(105deg,rgba(4,18,31,0.96)_38%,rgba(7,31,54,0.72)_100%)]"
+                />
+
+                <div className="relative">
+                  <p className="flex items-center gap-3 font-display text-[10px] font-bold uppercase tracking-[0.2em] text-gold">
+                    Something else?
+                    <span aria-hidden="true" className="h-px w-8 bg-gold/60" />
+                  </p>
+                  <h3 className="mt-4 max-w-[15ch] text-2xl font-bold leading-tight text-white">
                     Tell us what your building needs.
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-white/60">
+                  <p className="mt-3 max-w-[34ch] text-sm leading-relaxed text-white/70">
                     Multiple technical disciplines coordinated under one service
                     partner.
                   </p>
                   <Link
                     href="/contact#enquiry"
-                    className="group mt-7 inline-flex items-center gap-2 font-display text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:text-teal-300"
+                    className="group/cta mt-7 inline-flex items-center gap-2 rounded-lg bg-gold px-6 py-3.5 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-navy-950 transition-colors duration-300 hover:bg-white"
                   >
-                    <span className="h-px w-6 bg-teal transition-all duration-500 group-hover:w-10" />
                     Get in touch
-                    <ArrowUpRight
-                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                      strokeWidth={2}
+                    <ArrowRight
+                      className="h-4 w-4 transition-transform duration-300 group-hover/cta:translate-x-1"
+                      strokeWidth={2.5}
                       aria-hidden="true"
                     />
                   </Link>

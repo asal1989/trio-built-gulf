@@ -21,6 +21,10 @@
   --color-stone: #c9c9c1;
   --color-stone-dark: #b9b9b0;
 
+  /* Accent for the service cards — the warm counterweight to the navy. */
+  --color-gold: #e0b04a;
+  --color-gold-600: #c2933a;
+
   --color-champagne: #d8d9a5;
   --color-mist: #f5f7f8;
   --color-line: #dfe5e9;

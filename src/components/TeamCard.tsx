@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Download, Mail, Phone } from "lucide-react";
 import { asset } from "@/lib/asset";
 import type { TeamMember } from "@/lib/site";
@@ -17,12 +18,28 @@ export default function TeamCard({ member }: { member: TeamMember }) {
         className="absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 bg-teal transition-transform duration-500 [transition-timing-function:var(--ease-brand)] group-hover:scale-x-100"
       />
 
-      {/* Monogram plate — a portrait can replace this later */}
-      <div className="flex h-16 w-16 items-center justify-center bg-champagne">
-        <span className="font-display text-lg font-extrabold tracking-tight text-navy">
-          {member.initials}
-        </span>
-      </div>
+      {member.card ? (
+        /* The official printed card, shown as supplied. It carries the same
+           details as the links below, so it is decorative for a screen reader
+           only in the sense that nothing here is unique to it. */
+        <div className="overflow-hidden rounded-lg shadow-[0_24px_50px_-28px_rgba(0,0,0,0.85)]">
+          <Image
+            src={member.card}
+            alt={member.cardAlt ?? `Business card for ${member.name}`}
+            width={614}
+            height={378}
+            sizes="(min-width: 640px) 44vw, 90vw"
+            className="h-auto w-full"
+          />
+        </div>
+      ) : (
+        /* Monogram plate — used when no card scan is available */
+        <div className="flex h-16 w-16 items-center justify-center bg-champagne">
+          <span className="font-display text-lg font-extrabold tracking-tight text-navy">
+            {member.initials}
+          </span>
+        </div>
+      )}
 
       <h3 className="mt-8 text-xl font-bold leading-tight text-white sm:text-2xl">
         {member.name}

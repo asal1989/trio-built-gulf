@@ -107,6 +107,13 @@ export type Service = {
   title: string;
   description: string;
   icon: string;
+  /**
+   * Card photograph.
+   * TODO: replace each of these with a real photograph of the trade — they
+   * currently reuse the site's general imagery as stand-ins.
+   */
+  image: string;
+  alt: string;
 };
 
 export const services: Service[] = [
@@ -116,6 +123,8 @@ export const services: Service[] = [
     description:
       "Suspended ceiling systems and lightweight partitioning installed to line, level and specification.",
     icon: "LayoutPanelTop",
+    image: "/images/feat-interior.jpg",
+    alt: "Suspended ceiling and light partition installation",
   },
   {
     slug: "hvac-ventilation",
@@ -123,6 +132,8 @@ export const services: Service[] = [
     description:
       "Cooling, ventilation and filtration works that keep indoor environments comfortable and clean.",
     icon: "Wind",
+    image: "/images/feat-mep.jpg",
+    alt: "Air-conditioning and ventilation plant",
   },
   {
     slug: "systems-installation",
@@ -130,6 +141,8 @@ export const services: Service[] = [
     description:
       "Building systems installed, commissioned and maintained for dependable day-to-day operation.",
     icon: "Settings2",
+    image: "/images/proj-facilities.jpg",
+    alt: "Building systems installation on site",
   },
   {
     slug: "painting",
@@ -137,6 +150,8 @@ export const services: Service[] = [
     description:
       "Surface preparation and application delivering an even, durable and consistent finish.",
     icon: "Paintbrush",
+    image: "/images/proj-residential.jpg",
+    alt: "Painting and surface finishing works",
   },
   {
     slug: "steel-products",
@@ -144,6 +159,8 @@ export const services: Service[] = [
     description:
       "Fabricated steel elements installed, fixed and maintained with structural care.",
     icon: "Hammer",
+    image: "/images/proj-commercial.jpg",
+    alt: "Structural steel elements in place",
   },
   {
     slug: "glass-aluminum",
@@ -151,6 +168,8 @@ export const services: Service[] = [
     description:
       "Glazing, aluminum framing and facade elements fitted for alignment, sealing and finish.",
     icon: "Frame",
+    image: "/images/about-towers.jpg",
+    alt: "Glazed aluminium facade",
   },
   {
     slug: "tiling",
@@ -158,6 +177,8 @@ export const services: Service[] = [
     description:
       "Precise setting-out and laying of floor and wall tiles across wet and dry areas.",
     icon: "Grid3x3",
+    image: "/images/proj-interior.jpg",
+    alt: "Floor and wall tiling works",
   },
   {
     slug: "plumbing-sanitary",
@@ -165,6 +186,8 @@ export const services: Service[] = [
     description:
       "Supply, drainage and sanitary fittings installed and tested for leak-free performance.",
     icon: "Droplets",
+    image: "/images/feat-maintenance.jpg",
+    alt: "Plumbing and sanitary pipework",
   },
   {
     slug: "carpentry-flooring",
@@ -172,6 +195,8 @@ export const services: Service[] = [
     description:
       "Joinery, fit-out carpentry and wood flooring executed with a clean, considered finish.",
     icon: "Ruler",
+    image: "/images/proj-maintenance.jpg",
+    alt: "Carpentry and wood flooring works",
   },
   {
     slug: "electrical",
@@ -179,6 +204,8 @@ export const services: Service[] = [
     description:
       "Fittings, fixtures and circuits installed, repaired and maintained to operate safely.",
     icon: "Zap",
+    image: "/images/contact-plans.jpg",
+    alt: "Electrical fittings and distribution board",
   },
   {
     slug: "plaster",
@@ -186,6 +213,8 @@ export const services: Service[] = [
     description:
       "Internal and external plastering producing flat, true and paint-ready surfaces.",
     icon: "Layers",
+    image: "/images/cta-architecture.jpg",
+    alt: "Internal plastering works",
   },
 ];
 
@@ -392,6 +421,12 @@ export type TeamMember = {
   email?: string;
   /** Downloadable contact card — the digital equivalent of the printed card QR. */
   vcard?: string;
+  /**
+   * Front face of the official printed business card, generated from the
+   * scans in `assets/business-cards` by `node scripts/crop-business-cards.mjs`.
+   */
+  card?: string;
+  cardAlt?: string;
 };
 
 export const team: TeamMember[] = [
@@ -402,6 +437,9 @@ export const team: TeamMember[] = [
     phone: company.phone,
     email: company.email,
     vcard: "/contacts/lakshmikandh-ramadas.vcf",
+    card: "/images/card-lakshmikandh-ramadas.jpg",
+    cardAlt:
+      "Business card for Lakshmikandh Ramadas, Operation Manager at Trio Built Gulf Technical Services LLC",
   },
   {
     name: "Dilipkumar Muthaiah",
@@ -410,6 +448,9 @@ export const team: TeamMember[] = [
     phone: company.phoneAlt,
     email: company.email,
     vcard: "/contacts/dilipkumar-muthaiah.vcf",
+    card: "/images/card-dilipkumar-muthaiah.jpg",
+    cardAlt:
+      "Business card for Dilipkumar Muthaiah, Co-Founder at Trio Built Gulf Technical Services LLC",
   },
 ];
 
