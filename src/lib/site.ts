@@ -23,9 +23,9 @@ export const company = {
   email: "Triobuiltgulf@gmail.com",
   /** Primary operations line */
   phone: {
-    label: "+971 52 207 3289",
-    href: "tel:+971522073289",
-    whatsapp: "971522073289",
+    label: "+971 52 507 3289",
+    href: "tel:+971525073289",
+    whatsapp: "971525073289",
   },
   /** Co-Founder direct line */
   phoneAlt: {
