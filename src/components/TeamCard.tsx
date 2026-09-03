@@ -26,8 +26,8 @@ export default function TeamCard({ member }: { member: TeamMember }) {
           <Image
             src={member.card}
             alt={member.cardAlt ?? `Business card for ${member.name}`}
-            width={614}
-            height={378}
+            width={900}
+            height={539}
             sizes="(min-width: 640px) 44vw, 90vw"
             className="h-auto w-full"
           />

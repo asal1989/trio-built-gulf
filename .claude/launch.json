@@ -10,6 +10,18 @@
       ],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "cms-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "M:/office projects/trio-built-gulf-cms",
+        "run",
+        "dev"
+      ],
+      "port": 3100,
+      "autoPort": true
     }
   ]
 }

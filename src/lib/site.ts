@@ -422,8 +422,8 @@ export type TeamMember = {
   /** Downloadable contact card — the digital equivalent of the printed card QR. */
   vcard?: string;
   /**
-   * Front face of the official printed business card, generated from the
-   * scans in `assets/business-cards` by `node scripts/crop-business-cards.mjs`.
+   * The official printed business card, rendered from the supplied PDF in
+   * `assets/business-cards`.
    */
   card?: string;
   cardAlt?: string;
@@ -432,14 +432,14 @@ export type TeamMember = {
 export const team: TeamMember[] = [
   {
     name: "Lakshmikandh Ramadas",
-    role: "Operation Manager",
+    role: "Co-Founder",
     initials: "LR",
     phone: company.phone,
     email: company.email,
     vcard: "/contacts/lakshmikandh-ramadas.vcf",
     card: "/images/card-lakshmikandh-ramadas.jpg",
     cardAlt:
-      "Business card for Lakshmikandh Ramadas, Operation Manager at Trio Built Gulf Technical Services LLC",
+      "Business card for Lakshmikandh Ramadas, Co-Founder at Trio Built Gulf Technical Services LLC",
   },
   {
     name: "Dilipkumar Muthaiah",
