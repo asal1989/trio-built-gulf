@@ -49,7 +49,7 @@ const ASSURANCES = [
 ];
 
 const FIELD_BASE =
-  "w-full rounded-lg border bg-white py-3.5 pl-12 pr-4 text-sm text-navy transition-colors duration-300 placeholder:text-navy/35 focus:outline-none focus-visible:outline-none";
+  "w-full rounded-lg border bg-white py-3.5 pl-12 pr-4 text-sm text-navy transition-colors duration-300 placeholder:text-navy/65 focus:outline-none focus-visible:outline-none";
 
 export default function ContactForm() {
   const uid = useId();
@@ -190,7 +190,7 @@ export default function ContactForm() {
                       ))}
                     </select>
                     <ChevronDown
-                      className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-navy/40"
+                      className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-navy/55"
                       strokeWidth={1.5}
                       aria-hidden="true"
                     />
@@ -204,7 +204,7 @@ export default function ContactForm() {
                   </Label>
                   <div className="relative">
                     <PencilLine
-                      className="pointer-events-none absolute left-4 top-4 h-5 w-5 text-navy/40"
+                      className="pointer-events-none absolute left-4 top-4 h-5 w-5 text-navy/55"
                       strokeWidth={1.5}
                       aria-hidden="true"
                     />
@@ -240,7 +240,7 @@ export default function ContactForm() {
                   Send Enquiry
                 </button>
 
-                <p className="flex items-center gap-3 text-xs leading-relaxed text-navy/55">
+                <p className="flex items-center gap-3 text-xs leading-relaxed text-navy/70">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white">
                     <Lock
                       className="h-4 w-4 text-navy/45"
@@ -369,7 +369,7 @@ function Sent({ onReset }: { onReset: () => void }) {
 function FieldIcon({ icon: Glyph }: { icon: ComponentType<{ className?: string; strokeWidth?: number; "aria-hidden"?: boolean }> }) {
   return (
     <Glyph
-      className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-navy/40"
+      className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-navy/55"
       strokeWidth={1.5}
       aria-hidden={true}
     />
@@ -388,7 +388,7 @@ function Label({
   return (
     <label
       htmlFor={htmlFor}
-      className="mb-2.5 block font-display text-[10px] font-bold uppercase tracking-[0.18em] text-navy/60"
+      className="mb-2.5 block font-display text-[11px] font-bold uppercase tracking-[0.16em] text-navy/75"
     >
       {children}
       {required ? (
