@@ -67,7 +67,7 @@ export default function CTASection() {
 
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-[10px] border border-white/25 px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:border-teal-300 hover:bg-white/5"
+                  className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-gold px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-navy-950 transition-colors duration-300 hover:bg-gold-600"
                 >
                   Contact Us
                 </Link>
