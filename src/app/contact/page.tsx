@@ -104,6 +104,9 @@ export default function ContactPage() {
                           className="block text-base text-navy transition-colors hover:text-teal-700"
                         >
                           {company.phone.label}
+                          <span className="ml-2 text-[11px] uppercase tracking-[0.14em] text-navy/45">
+                            Co-Founder
+                          </span>
                         </a>
                         <a
                           href={company.phoneAlt.href}
