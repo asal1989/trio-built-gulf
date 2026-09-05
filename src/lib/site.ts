@@ -20,7 +20,7 @@ export const company = {
   city: "Dubai",
   country: "United Arab Emirates",
   location: "Dubai, United Arab Emirates",
-  email: "Triobuiltgulf@gmail.com",
+  email: "triobuiltgulf@gmail.com",
   /** Primary operations line */
   phone: {
     label: "+971 52 507 3289",
