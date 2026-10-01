@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { company } from "@/lib/site";
 
 /**
@@ -91,12 +91,12 @@ export default function Hero() {
           </Link>
 
           <Link
-            href="/#services"
+            href="/services"
             className="group inline-flex items-center justify-center gap-2 rounded-[10px] border border-white/25 px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-teal-300 hover:bg-white/5"
           >
             Explore Our Services
-            <ArrowDown
-              className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5"
+            <ArrowRight
+              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
               strokeWidth={2.5}
             />
           </Link>

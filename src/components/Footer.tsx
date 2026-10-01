@@ -61,7 +61,7 @@ export default function Footer() {
               {services.map((service) => (
                 <li key={service.slug}>
                   <Link
-                    href="/#services"
+                    href="/services"
                     className="text-sm leading-relaxed text-white/70 transition-colors duration-300 hover:text-teal-300"
                   >
                     {service.title}

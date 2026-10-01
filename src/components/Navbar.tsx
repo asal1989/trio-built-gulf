@@ -82,8 +82,7 @@ export default function Navbar() {
           <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-1">
               {navLinks.map((link) => {
-                const active =
-                  link.href === "/contact" && pathname === "/contact";
+                const active = link.href === pathname;
                 return (
                   <li key={link.href}>
                     <Link

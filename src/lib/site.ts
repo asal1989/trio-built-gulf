@@ -71,12 +71,11 @@ export const defaultWhatsAppMessage =
 /* -------------------------------------------------------------------------- */
 
 export const navLinks = [
-  { label: "Home", href: "/#home" },
-  { label: "About", href: "/#about" },
-  { label: "Services", href: "/#services" },
-  { label: "Projects", href: "/#projects" },
-  { label: "Why Us", href: "/#why-us" },
-  { label: "Team", href: "/#team" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "Why Us", href: "/why-us" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
