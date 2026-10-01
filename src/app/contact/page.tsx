@@ -211,6 +211,25 @@ export default function ContactPage() {
         </div>
       </section>
 
+      {/* Map */}
+      <section aria-labelledby="map-heading" className="bg-mist py-16 sm:py-20">
+        <div className="shell">
+          <h2 id="map-heading" className="sr-only">
+            Our location
+          </h2>
+          <div className="overflow-hidden rounded-2xl border border-line">
+            <iframe
+              title={`${company.legalName} location in ${company.location}`}
+              src="https://www.google.com/maps?q=Dubai,+United+Arab+Emirates&output=embed"
+              className="h-[360px] w-full"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Enquiry */}
       <section
         id="enquiry"
