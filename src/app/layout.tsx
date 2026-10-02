@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import { company } from "@/lib/site";
 import { SITE_URL, websiteSchema } from "@/lib/seo";
 import "./globals.css";
@@ -162,6 +163,7 @@ export default function RootLayout({
         <Navbar />
         <main id="main">{children}</main>
         <Footer />
+        <FloatingWhatsApp />
 
         <script
           type="application/ld+json"

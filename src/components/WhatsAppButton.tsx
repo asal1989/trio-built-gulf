@@ -1,6 +1,6 @@
 import { company, defaultWhatsAppMessage, whatsappLink } from "@/lib/site";
 
-function WhatsAppGlyph({ className }: { className?: string }) {
+export function WhatsAppGlyph({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
