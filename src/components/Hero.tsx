@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import WhatsAppButton from "./WhatsAppButton";
 import { company } from "@/lib/site";
 
 /**
@@ -65,41 +66,32 @@ export default function Hero() {
           {company.nameLine2}
         </p>
 
-        <h1 className="animate-fade-up mt-5 max-w-5xl text-[clamp(2.5rem,8.2vw,6.25rem)] font-extrabold uppercase leading-[0.96] text-white [animation-delay:320ms]">
-          Engineering
+        <h1 className="animate-fade-up mt-5 max-w-5xl text-[clamp(2.25rem,6.4vw,5rem)] font-extrabold uppercase leading-[1] text-white [animation-delay:320ms]">
+          MEP, HVAC &amp; Building
           <br />
-          Excellence.
-          <span className="block text-teal-300">Built for Performance.</span>
+          Technical Services
+          <span className="block text-teal-300">in Dubai</span>
         </h1>
 
         <p className="animate-fade-up mt-8 max-w-2xl text-pretty text-base leading-relaxed text-white/70 [animation-delay:440ms] sm:text-lg">
-          Comprehensive technical, installation and maintenance solutions for
-          commercial, residential and industrial environments across Dubai and
-          the UAE.
+          Reliable installation, fit-out and maintenance solutions for
+          commercial, residential and industrial projects.
         </p>
 
         <div className="animate-fade-up mt-10 flex flex-col gap-3 [animation-delay:560ms] sm:flex-row sm:items-center sm:gap-4">
           <Link
             href="/contact#enquiry"
-            className="group inline-flex items-center justify-center gap-2 rounded-[10px] bg-teal px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-teal-700"
+            className="group inline-flex items-center justify-center gap-2 rounded-[10px] bg-teal px-8 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-teal-700"
           >
-            Get a Quote
+            Request a Quote
             <ArrowUpRight
               className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               strokeWidth={2.5}
+              aria-hidden="true"
             />
           </Link>
 
-          <Link
-            href="/services"
-            className="group inline-flex items-center justify-center gap-2 rounded-[10px] border border-white/25 px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white backdrop-blur-sm transition-colors duration-300 hover:border-teal-300 hover:bg-white/5"
-          >
-            Explore Our Services
-            <ArrowRight
-              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
-              strokeWidth={2.5}
-            />
-          </Link>
+          <WhatsAppButton label="WhatsApp Us" className="px-8" />
         </div>
 
         {/* Discipline strip along the bottom of the frame */}
@@ -117,6 +109,9 @@ export default function Hero() {
               ),
             )}
           </ul>
+          <p className="mt-5 font-display text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/90 sm:text-[11px]">
+            {company.tagline}
+          </p>
         </div>
       </div>
     </section>
