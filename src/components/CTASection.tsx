@@ -134,6 +134,9 @@ export default function CTASection() {
                         className="block text-base text-white transition-colors hover:text-teal-300"
                       >
                         {company.phone.label}
+                        <span className="ml-2 text-[11px] uppercase tracking-[0.14em] text-white/40">
+                          Co-Founder
+                        </span>
                       </a>
                       <a
                         href={company.phoneAlt.href}
