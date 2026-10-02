@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
@@ -6,16 +7,20 @@ import Reveal from "@/components/Reveal";
 import TeamCard from "@/components/TeamCard";
 import { process, team } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About",
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
+  title: "About Trio Built Gulf | Technical Services Company in Dubai, UAE",
   description:
-    "Trio Built Gulf Technical Services LLC provides professional technical installation and maintenance solutions for buildings across Dubai and the UAE.",
-  alternates: { canonical: "/about" },
-};
+    "Trio Built Gulf Technical Services LLC is a Dubai technical services company delivering installation, MEP, HVAC and building maintenance for commercial, residential and industrial properties across the UAE.",
+});
 
 export default function AboutPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "About", path: "/about/" }])) }}
+      />
       <PageHeader
         eyebrow="Who we are"
         title={

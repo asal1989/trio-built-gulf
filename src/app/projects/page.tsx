@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import ProjectCard from "@/components/ProjectCard";
 import { projects } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Projects",
+export const metadata: Metadata = pageMetadata({
+  path: "/projects",
+  title: "Projects & Capabilities | Fit-Out, MEP & Maintenance Dubai",
   description:
-    "The environments Trio Built Gulf Technical Services LLC works in and the packages it delivers — commercial, interior, facilities, MEP and residential.",
-  alternates: { canonical: "/projects" },
-};
+    "The commercial, interior, facilities, MEP and residential work Trio Built Gulf delivers across Dubai and the UAE.",
+});
 
 export default function ProjectsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Projects", path: "/projects/" }])) }}
+      />
       <PageHeader
         eyebrow="Capabilities"
         title={

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { breadcrumbSchema, servicesSchema, pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -8,16 +9,24 @@ import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
 import { services } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Services",
+export const metadata: Metadata = pageMetadata({
+  path: "/services",
+  title: "Technical Services Dubai | MEP, HVAC, Ceilings, Plumbing & Electrical",
   description:
-    "The eleven licensed technical activities Trio Built Gulf Technical Services LLC carries out in Dubai and the UAE — MEP, HVAC, interior finishing, maintenance and more.",
-  alternates: { canonical: "/services" },
-};
+    "Eleven licensed technical services in Dubai and the UAE: false ceilings, HVAC and ventilation, plumbing, electrical, painting, tiling, carpentry, glass and aluminium, steel and plaster works.",
+});
 
 export default function ServicesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Services", path: "/services/" }])) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
+      />
       <PageHeader
         eyebrow="What we do"
         title={

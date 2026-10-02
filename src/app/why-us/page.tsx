@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import Icon from "@/components/Icon";
 import { differentiators } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Why Us",
+export const metadata: Metadata = pageMetadata({
+  path: "/why-us",
+  title: "Why Choose Trio Built Gulf | MEP & Maintenance Contractor Dubai",
   description:
-    "Why clients choose Trio Built Gulf Technical Services LLC for technical installation and maintenance work in Dubai, UAE.",
-  alternates: { canonical: "/why-us" },
-};
+    "Why clients in Dubai choose Trio Built Gulf Technical Services LLC for reliable technical installation, MEP, HVAC and building maintenance.",
+});
 
 export default function WhyUsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Why Us", path: "/why-us/" }])) }}
+      />
       <PageHeader
         eyebrow="Why us"
         title={

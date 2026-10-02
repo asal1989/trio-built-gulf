@@ -3,6 +3,7 @@ import { Inter, Manrope } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { company } from "@/lib/site";
+import { SITE_URL, websiteSchema } from "@/lib/seo";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -19,28 +20,25 @@ const inter = Inter({
   display: "swap",
 });
 
-/**
- * TODO: set this to the live domain before launch — it makes canonical URLs and
- * social-share images absolute.
- */
-const SITE_URL = "https://triobuiltgulf.ae";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Trio Built Gulf | Technical Services & Maintenance Dubai",
+    default: "Trio Built Gulf | MEP, HVAC & Building Maintenance Services in Dubai",
     template: `%s | ${company.name}`,
   },
   description:
     "Trio Built Gulf Technical Services LLC provides professional technical installation, maintenance, MEP, HVAC, interior finishing and building services in Dubai, UAE.",
   keywords: [
+    "Trio Built Gulf",
     "technical services Dubai",
     "MEP contractor Dubai",
-    "HVAC maintenance UAE",
+    "HVAC maintenance Dubai",
+    "AC maintenance Dubai",
     "building maintenance Dubai",
     "interior fit-out Dubai",
     "false ceiling installation Dubai",
-    "plumbing and electrical maintenance UAE",
+    "plumbing and electrical maintenance Dubai",
+    "facilities maintenance UAE",
   ],
   applicationName: company.legalName,
   authors: [{ name: company.legalName }],
@@ -52,7 +50,7 @@ export const metadata: Metadata = {
     locale: "en_AE",
     url: SITE_URL,
     siteName: company.legalName,
-    title: "Trio Built Gulf | Technical Services & Maintenance Dubai",
+    title: "Trio Built Gulf | MEP, HVAC & Building Maintenance Services in Dubai",
     description:
       "Professional technical installation, maintenance, MEP, HVAC and interior finishing services across Dubai and the UAE.",
     images: [
@@ -66,7 +64,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trio Built Gulf | Technical Services & Maintenance Dubai",
+    title: "Trio Built Gulf | MEP, HVAC & Building Maintenance Services in Dubai",
     description:
       "Professional technical installation, maintenance, MEP, HVAC and interior finishing services across Dubai and the UAE.",
     images: ["/images/hero-dubai.jpg"],
@@ -77,6 +75,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   category: "business",
+  verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION },
 };
 
 export const viewport: Viewport = {
@@ -88,7 +87,7 @@ export const viewport: Viewport = {
 /** LocalBusiness structured data for local search. */
 const localBusinessSchema = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
   "@id": `${SITE_URL}/#organisation`,
   name: company.legalName,
   alternateName: company.name,
@@ -96,6 +95,7 @@ const localBusinessSchema = {
   email: company.email,
   telephone: company.phone.label,
   image: `${SITE_URL}/images/hero-dubai.jpg`,
+  logo: `${SITE_URL}/images/logo.png`,
   description:
     "Trio Built Gulf Technical Services LLC provides professional technical installation, maintenance, MEP, HVAC, interior finishing and building services in Dubai, UAE.",
   address: {
@@ -169,6 +169,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(localBusinessSchema),
           }}
+        />
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </body>
     </html>

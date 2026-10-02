@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/seo";
 
 /** Generated at build time into a static `robots.txt`, alongside sitemap.ts. */
-const SITE_URL = "https://triobuiltgulf.ae";
 
 // Required for `output: "export"` — without it the build treats this route as
 // dynamic and refuses to prerender it into a static file.

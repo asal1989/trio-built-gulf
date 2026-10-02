@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
@@ -7,16 +8,20 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import Reveal from "@/components/Reveal";
 import { company } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact",
+export const metadata: Metadata = pageMetadata({
+  path: "/contact",
+  title: "Contact Trio Built Gulf | Get a Quote in Dubai, UAE",
   description:
-    "Contact Trio Built Gulf Technical Services LLC in Dubai, UAE for technical installation, MEP, HVAC, interior finishing and building maintenance enquiries.",
-  alternates: { canonical: "/contact" },
-};
+    "Request a quote from Trio Built Gulf Technical Services LLC in Dubai. Call +971 52 507 3289, WhatsApp or email for MEP, HVAC, interior finishing and maintenance enquiries.",
+});
 
 export default function ContactPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: "Home", path: "/" }, { name: "Contact", path: "/contact/" }])) }}
+      />
       {/* Page header */}
       <section
         aria-labelledby="contact-heading"
