@@ -279,31 +279,59 @@ export const featured: Featured[] = [
 export const differentiators = [
   {
     index: "01",
-    title: "Quality First",
+    title: "Integrated Technical Expertise",
     description:
-      "Every installation and maintenance activity is approached with attention to workmanship and detail.",
-    icon: "BadgeCheck",
-  },
-  {
-    index: "02",
-    title: "Reliable Execution",
-    description:
-      "Professional coordination and dependable service delivery for every requirement.",
-    icon: "CalendarCheck",
-  },
-  {
-    index: "03",
-    title: "Complete Solutions",
-    description:
-      "Multiple technical disciplines brought together under one service partner.",
+      "Multiple building services under one professional team, helping clients simplify coordination and project execution.",
     icon: "Layers3",
   },
   {
-    index: "04",
-    title: "Client Focused",
+    index: "02",
+    title: "Quality Without Compromise",
     description:
-      "Solutions designed around project requirements, operational needs and long-term performance.",
-    icon: "Target",
+      "We focus on workmanship, attention to detail and the use of appropriate materials and proven installation practices.",
+    icon: "BadgeCheck",
+  },
+  {
+    index: "03",
+    title: "Reliable Project Execution",
+    description:
+      "From initial site assessment to final handover, we follow a structured approach focused on coordination, quality and timely execution.",
+    icon: "CalendarCheck",
+  },
+  {
+    index: "04",
+    title: "Safety-First Approach",
+    description:
+      "Safety is incorporated into our planning and site operations to support a secure and professional working environment.",
+    icon: "ShieldCheck",
+  },
+  {
+    index: "05",
+    title: "Responsive Technical Support",
+    description:
+      "Our services extend beyond installation, with maintenance and technical support designed to keep building systems operating reliably.",
+    icon: "Headset",
+  },
+  {
+    index: "06",
+    title: "Solutions Tailored to Every Project",
+    description:
+      "Every project has different requirements. We develop practical solutions based on the site, application, scope and client expectations.",
+    icon: "Ruler",
+  },
+  {
+    index: "07",
+    title: "Transparent & Professional Communication",
+    description:
+      "Clear communication, well-defined scopes and professional coordination help create smoother relationships throughout the project.",
+    icon: "MessagesSquare",
+  },
+  {
+    index: "08",
+    title: "Long-Term Partnership",
+    description:
+      "Our objective is not simply to complete a job, but to build lasting relationships through dependable service, consistent quality and ongoing support.",
+    icon: "Handshake",
   },
 ] as const;
 
