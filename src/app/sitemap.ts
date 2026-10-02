@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
+import { servicePages } from "@/lib/service-pages";
 
 /**
  * Generated at build time into a static `sitemap.xml`, matching the static
@@ -9,7 +10,15 @@ import { SITE_URL } from "@/lib/seo";
  * follow the same convention, so a search engine reading any of them agrees.
  */
 
-const routes = ["", "/about", "/services", "/projects", "/why-us", "/contact"];
+const routes = [
+  "",
+  "/about",
+  "/services",
+  ...servicePages.map((p) => `/services/${p.slug}`),
+  "/projects",
+  "/why-us",
+  "/contact",
+];
 
 // Required for `output: "export"` — without it the build treats this route as
 // dynamic and refuses to prerender it into a static file.
@@ -22,6 +31,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE_URL}${route}/`,
     lastModified,
     changeFrequency: route === "" ? "weekly" : "monthly",
-    priority: route === "" ? 1 : route === "/contact" ? 0.9 : 0.8,
+    priority:
+      route === ""
+        ? 1
+        : route === "/contact" || route.startsWith("/services/")
+          ? 0.9
+          : 0.8,
   }));
 }

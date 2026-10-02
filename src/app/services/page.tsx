@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
+import { servicePages } from "@/lib/service-pages";
 import { services } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
@@ -111,6 +112,44 @@ export default function ServicesPage() {
                 </div>
               </div>
             </Reveal>
+          </ul>
+        </div>
+      </section>
+
+      {/* Service guides — one page per search intent, linked from here */}
+      <section className="bg-white py-20 sm:py-24 lg:py-28">
+        <div className="shell">
+          <Reveal>
+            <span className="eyebrow text-teal-700">Technical services in Dubai</span>
+            <h2 className="mt-5 max-w-3xl text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold leading-tight text-navy">
+              Find the service you need
+            </h2>
+            <p className="mt-5 max-w-3xl text-pretty text-base leading-relaxed text-navy/70 sm:text-lg">
+              Trio Built Gulf provides technical services in Dubai for offices,
+              retail, hospitality, residential and industrial properties —
+              from a single trade to a coordinated scope. Each guide below
+              explains what the work covers, when you need it and how we deliver it.
+            </p>
+          </Reveal>
+          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {servicePages.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  href={`/services/${p.slug}`}
+                  className="group flex h-full flex-col rounded-xl border border-line p-6 transition-colors duration-300 hover:border-teal sm:p-7"
+                >
+                  <h3 className="text-lg font-bold text-navy">
+                    {p.h1.lead} {p.h1.accent}
+                  </h3>
+                  <span aria-hidden="true" className="mt-3 block h-[3px] w-9 bg-gold" />
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-navy/65">{p.summary}</p>
+                  <span className="mt-5 inline-flex items-center gap-2 font-display text-[10px] font-bold uppercase tracking-[0.18em] text-teal-700">
+                    Read the guide
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2.5} aria-hidden="true" />
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </section>

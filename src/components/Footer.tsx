@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Logo from "./Logo";
-import { company, navLinks, services } from "@/lib/site";
+import { company, navLinks } from "@/lib/site";
+import { servicePages } from "@/lib/service-pages";
 
 /**
  * Deep navy — it anchors the page and mirrors the hero, with the white
@@ -58,13 +59,13 @@ export default function Footer() {
               Services
             </h2>
             <ul className="mt-6 space-y-3">
-              {services.map((service) => (
+              {servicePages.map((service) => (
                 <li key={service.slug}>
                   <Link
-                    href="/services"
+                    href={`/services/${service.slug}`}
                     className="text-sm leading-relaxed text-white/70 transition-colors duration-300 hover:text-teal-300"
                   >
-                    {service.title}
+                    {service.label}
                   </Link>
                 </li>
               ))}
