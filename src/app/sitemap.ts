@@ -17,6 +17,7 @@ const routes = [
   ...servicePages.map((p) => `/services/${p.slug}`),
   "/projects",
   "/why-us",
+  "/careers",
   "/contact",
 ];
 

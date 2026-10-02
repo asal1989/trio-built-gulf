@@ -1,8 +1,36 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import Logo from "./Logo";
-import { company, navLinks } from "@/lib/site";
+import { WhatsAppGlyph } from "./WhatsAppButton";
 import { servicePages } from "@/lib/service-pages";
+import {
+  company,
+  defaultWhatsAppMessage,
+  whatsappLink,
+} from "@/lib/site";
+
+const companyLinks = [
+  { label: "About", href: "/about" },
+  { label: "Projects", href: "/projects" },
+  { label: "Why Us", href: "/why-us" },
+  { label: "Careers", href: "/careers" },
+  { label: "Contact", href: "/contact" },
+] as const;
+
+const disciplines = [
+  "MEP",
+  "HVAC",
+  "Plumbing",
+  "Electrical",
+  "Fit-Out",
+  "Maintenance",
+] as const;
+
+const linkClass =
+  "text-sm leading-relaxed text-white/70 transition-colors duration-300 hover:text-teal-300";
+
+const headingClass =
+  "font-display text-[10px] font-bold uppercase tracking-[0.2em] text-white/50";
 
 /**
  * Deep navy — it anchors the page and mirrors the hero, with the white
@@ -17,35 +45,87 @@ export default function Footer() {
         <div className="tech-grid absolute -inset-[20%] text-white/[0.05]" />
       </div>
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-white/15" />
+      <span aria-hidden="true" className="absolute left-0 top-0 h-[3px] w-24 bg-gold" />
 
-      <div className="shell relative py-16 sm:py-20">
+      <div className="shell relative pb-28 pt-16 sm:pt-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
           {/* Identity */}
-          <div className="lg:col-span-4">
+          <div className="md:col-span-2 lg:col-span-4">
             <Logo variant="onDark" />
             <p className="mt-7 max-w-sm text-pretty text-sm leading-relaxed text-white/65">
               Professional technical services, installation and maintenance
               solutions for commercial, residential and industrial environments
               across Dubai and the UAE.
             </p>
-            <p className="mt-7 flex items-center gap-3 font-display text-[10px] font-bold uppercase tracking-[0.2em] text-teal-300">
-              <span aria-hidden="true" className="h-1 w-1 rotate-45 bg-teal-300" />
-              {company.city} &bull; {company.country}
-            </p>
+
+            <ul
+              aria-label="Disciplines"
+              className="mt-7 flex flex-wrap gap-x-2 gap-y-2"
+            >
+              {disciplines.map((d) => (
+                <li
+                  key={d}
+                  className="rounded-sm border border-white/15 px-2.5 py-1 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-white/70"
+                >
+                  {d}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a
+                href={whatsappLink(company.phone.whatsapp, defaultWhatsAppMessage)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2.5 rounded-[10px] bg-[#1f9d55] px-6 py-3.5 font-display text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:bg-[#177f44]"
+              >
+                <WhatsAppGlyph className="h-5 w-5" />
+                WhatsApp now
+                <span className="sr-only"> (opens WhatsApp in a new tab)</span>
+              </a>
+              <Link
+                href="/contact#enquiry"
+                className="group inline-flex items-center justify-center gap-2 rounded-[10px] border border-white/25 px-6 py-3.5 font-display text-[11px] font-bold uppercase tracking-[0.16em] text-white transition-colors duration-300 hover:border-teal-300 hover:bg-white/5"
+              >
+                Request a quote
+                <ArrowUpRight
+                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
+              </Link>
+            </div>
           </div>
 
-          {/* Navigation */}
-          <nav aria-label="Footer" className="lg:col-span-2">
-            <h2 className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-              Navigate
-            </h2>
+          {/* Services */}
+          <nav aria-label="Services" className="lg:col-span-3">
+            <h2 className={headingClass}>Services</h2>
             <ul className="mt-6 space-y-3">
-              {navLinks.map((link) => (
+              {servicePages.map((service) => (
+                <li key={service.slug}>
+                  <Link href={`/services/${service.slug}`} className={linkClass}>
+                    {service.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/services"
+                  className="text-sm font-semibold text-teal-300 transition-colors duration-300 hover:text-white"
+                >
+                  All services &rarr;
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Company */}
+          <nav aria-label="Company" className="lg:col-span-2">
+            <h2 className={headingClass}>Company</h2>
+            <ul className="mt-6 space-y-3">
+              {companyLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/70 transition-colors duration-300 hover:text-teal-300"
-                  >
+                  <Link href={link.href} className={linkClass}>
                     {link.label}
                   </Link>
                 </li>
@@ -53,56 +133,59 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* Services */}
-          <div className="lg:col-span-3">
-            <h2 className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-              Services
-            </h2>
-            <ul className="mt-6 space-y-3">
-              {servicePages.map((service) => (
-                <li key={service.slug}>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    className="text-sm leading-relaxed text-white/70 transition-colors duration-300 hover:text-teal-300"
-                  >
-                    {service.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Contact */}
           <div className="lg:col-span-3">
-            <h2 className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">
-              Contact
-            </h2>
-            <address className="mt-6 space-y-4 not-italic">
+            <h2 className={headingClass}>Contact</h2>
+            <address className="mt-6 space-y-5 not-italic">
               <p className="flex items-start gap-3 text-sm text-white/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.5} aria-hidden="true" />
                 {company.location}
               </p>
-              <a
-                href={`mailto:${company.email}`}
-                className="flex items-start gap-3 break-all text-sm text-white/70 transition-colors duration-300 hover:text-teal-300"
-              >
+
+              <div className="flex items-start gap-3">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.5} aria-hidden="true" />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+                    Phone
+                  </p>
+                  <a href={company.phone.href} className={`block ${linkClass}`}>
+                    {company.phone.label}
+                  </a>
+                  <a href={company.phoneAlt.href} className={`block ${linkClass}`}>
+                    {company.phoneAlt.label}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <WhatsAppGlyph className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+                    WhatsApp
+                  </p>
+                  <a
+                    href={whatsappLink(company.phone.whatsapp, defaultWhatsAppMessage)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block ${linkClass}`}
+                  >
+                    {company.phone.label}
+                    <span className="sr-only"> (opens WhatsApp in a new tab)</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.5} aria-hidden="true" />
-                {company.email}
-              </a>
-              <a
-                href={company.phone.href}
-                className="flex items-start gap-3 text-sm text-white/70 transition-colors duration-300 hover:text-teal-300"
-              >
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.5} aria-hidden="true" />
-                {company.phone.label}
-              </a>
-              <a
-                href={company.phoneAlt.href}
-                className="flex items-start gap-3 text-sm text-white/70 transition-colors duration-300 hover:text-teal-300"
-              >
-                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" strokeWidth={1.5} aria-hidden="true" />
-                {company.phoneAlt.label}
-              </a>
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+                    Email
+                  </p>
+                  <a href={`mailto:${company.email}`} className={`block break-all ${linkClass}`}>
+                    {company.email}
+                  </a>
+                </div>
+              </div>
             </address>
           </div>
         </div>
@@ -112,7 +195,7 @@ export default function Footer() {
             &copy; {year} {company.legalName}. All Rights Reserved.
           </p>
           <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-            Technical Services &bull; Installation &bull; Maintenance
+            {company.tagline}
           </p>
         </div>
       </div>
