@@ -322,6 +322,9 @@ function Assurances() {
               className="mt-1 block text-lg font-bold text-white transition-colors duration-300 hover:text-teal-300"
             >
               {company.phone.label}
+              <span className="ml-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/40">
+                Co-Founder
+              </span>
             </a>
           </div>
         </div>
