@@ -210,4 +210,26 @@
     to   { opacity: 1; }
   }
   .animate-fade { animation: trio-fade 1.8s ease-out both; }
+
+  /* Page transition (app/template.tsx) */
+  @keyframes trio-page {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .animate-page { animation: trio-page 260ms ease-out both; }
+
+  /* "Engineering line": draws left to right with an arrow that follows,
+     triggered when its <Reveal /> parent becomes visible. */
+  .eline {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1500ms var(--ease-brand) 350ms;
+  }
+  .earrow {
+    opacity: 0;
+    transform: translateX(-14px);
+    transition: opacity 600ms ease 1500ms, transform 900ms var(--ease-brand) 1500ms;
+  }
+  .reveal.is-visible .eline { transform: scaleX(1); }
+  .reveal.is-visible .earrow { opacity: 1; transform: none; }
 }

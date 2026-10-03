@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Project } from "@/lib/site";
 
 /**
@@ -25,7 +26,7 @@ export default function ProjectCard({
         featured ? "min-h-[420px] lg:min-h-[560px]" : "min-h-[340px] lg:min-h-[400px]"
       }`}
     >
-      <div className="plate absolute inset-0">
+      <div className="plate absolute inset-0 [&_img]:duration-[1800ms] group-hover:[&_img]:scale-[1.09]">
         <Image
           src={project.image}
           alt={project.alt}
@@ -34,6 +35,12 @@ export default function ProjectCard({
           className="object-cover"
         />
       </div>
+
+      {/* Hover: darken the photograph */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-navy-950/0 transition-colors duration-700 group-hover:bg-navy-950/45"
+      />
 
       {/* Legibility gradient */}
       <div
@@ -63,6 +70,17 @@ export default function ProjectCard({
         <p className="mt-4 max-w-md text-pretty text-sm leading-relaxed text-white/65">
           {project.description}
         </p>
+
+        {/* Hover call-to-action (always visible on touch screens, which have no hover) */}
+        <Link
+          href="/contact#enquiry"
+          className="mt-6 inline-flex translate-y-2 items-center gap-2 font-display text-[11px] font-bold uppercase tracking-[0.2em] text-gold opacity-0 transition-all duration-500 [transition-timing-function:var(--ease-brand)] group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100 [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
+        >
+          Discuss a similar project
+          <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
+            &rarr;
+          </span>
+        </Link>
 
         {meta.length > 0 ? (
           <dl className="mt-5 flex flex-wrap gap-x-6 gap-y-1 text-[11px] uppercase tracking-[0.14em] text-white/50">

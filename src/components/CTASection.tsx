@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
+import ParallaxLayer from "./ParallaxLayer";
 import Reveal from "./Reveal";
 import { WhatsAppGlyph } from "./WhatsAppButton";
 import { company, defaultWhatsAppMessage, whatsappLink } from "@/lib/site";
@@ -13,14 +14,16 @@ export default function CTASection() {
       className="relative overflow-hidden bg-navy-950"
     >
       {/* Architectural backdrop, pushed far back */}
-      <Image
-        src="/images/cta-architecture.jpg"
-        alt=""
-        aria-hidden="true"
-        fill
-        sizes="100vw"
-        className="object-cover object-center opacity-[0.18]"
-      />
+      <ParallaxLayer mode="element" speed={0.14} className="absolute -inset-y-16 inset-x-0">
+        <Image
+          src="/images/cta-architecture.jpg"
+          alt=""
+          aria-hidden="true"
+          fill
+          sizes="100vw"
+          className="object-cover object-center opacity-[0.18]"
+        />
+      </ParallaxLayer>
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[linear-gradient(120deg,rgba(4,18,31,0.96)_0%,rgba(7,31,54,0.88)_55%,rgba(10,46,80,0.9)_100%)]"

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import ParallaxLayer from "./ParallaxLayer";
 import { company } from "@/lib/site";
 
 /**
@@ -25,15 +26,17 @@ export default function PageHeader({
       aria-labelledby="page-heading"
       className="relative overflow-hidden bg-navy-950 pb-20 pt-20 sm:pb-24 sm:pt-24 lg:pb-28 lg:pt-28"
     >
-      <Image
-        src={image}
-        alt={imageAlt}
-        aria-hidden="true"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center opacity-20"
-      />
+      <ParallaxLayer mode="element" speed={0.12} className="absolute -inset-y-12 inset-x-0">
+        <Image
+          src={image}
+          alt={imageAlt}
+          aria-hidden="true"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-20"
+        />
+      </ParallaxLayer>
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[linear-gradient(140deg,rgba(4,18,31,0.95)_0%,rgba(7,31,54,0.88)_60%,rgba(10,46,80,0.9)_100%)]"

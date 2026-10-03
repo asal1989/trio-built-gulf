@@ -21,7 +21,7 @@ export default function ServiceCard({
   index: number;
 }) {
   return (
-    <article className="group relative flex h-full min-h-[220px] overflow-hidden rounded-xl bg-white shadow-[0_18px_40px_-28px_rgba(4,18,31,0.75)] transition-transform duration-500 [transition-timing-function:var(--ease-brand)] hover:-translate-y-1">
+    <article className="group relative flex h-full min-h-[220px] overflow-hidden rounded-xl border-2 border-transparent bg-white shadow-[0_18px_40px_-28px_rgba(4,18,31,0.75)] transition-[transform,border-color,box-shadow] duration-500 [transition-timing-function:var(--ease-brand)] hover:-translate-y-[5px] hover:border-gold hover:shadow-[0_26px_46px_-26px_rgba(4,18,31,0.8)]">
       {/* Photo panel */}
       <div
         className="relative w-[38%] shrink-0"
@@ -55,11 +55,11 @@ export default function ServiceCard({
         </span>
 
         {/* The right padding keeps a wrapped title clear of the index. */}
-        <h3 className="relative pr-14 text-base font-bold leading-snug text-navy sm:pr-16 sm:text-lg">
+        <h3 className="relative pr-14 text-base font-bold leading-snug text-navy transition-colors duration-300 group-hover:text-teal-700 sm:pr-16 sm:text-lg">
           {service.title}
         </h3>
 
-        <span aria-hidden="true" className="mt-3 block h-[3px] w-9 bg-gold" />
+        <span aria-hidden="true" className="mt-3 block h-[3px] w-9 bg-gold transition-all duration-500 [transition-timing-function:var(--ease-brand)] group-hover:w-16" />
 
         <p className="mt-3 flex-1 text-pretty text-[13px] leading-relaxed text-navy/60">
           {service.description}

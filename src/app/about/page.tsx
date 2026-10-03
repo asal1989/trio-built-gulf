@@ -5,6 +5,7 @@ import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
 import Reveal from "@/components/Reveal";
 import TeamCard from "@/components/TeamCard";
+import ScrollDrawLine from "@/components/ScrollDrawLine";
 import { process, team } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
@@ -156,6 +157,7 @@ export default function AboutPage() {
               aria-hidden="true"
               className="absolute left-[19px] top-2 z-0 h-full w-px bg-line lg:left-0 lg:top-[19px] lg:h-px lg:w-full"
             />
+            <ScrollDrawLine />
 
             {process.map((step, i) => (
               <Reveal as="li" key={step.index} delay={i * 110} className="relative">

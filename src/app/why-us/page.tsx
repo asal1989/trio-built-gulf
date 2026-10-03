@@ -90,7 +90,10 @@ export default function WhyUsPage() {
                     </span>
                     <Icon name={item.icon} className="h-7 w-7 text-teal-300" />
                   </div>
-                  <span aria-hidden="true" className="mt-7 block h-px w-full bg-teal/40" />
+                  <span aria-hidden="true" className="relative mt-7 block h-px w-full">
+                    <span className="eline absolute inset-0 bg-teal/70" />
+                    <span className="earrow absolute -top-[9px] right-0 font-display text-sm leading-none text-teal-300">&rarr;</span>
+                  </span>
                   <h2 className="mt-7 text-lg font-bold leading-snug text-white">
                     {item.title}
                   </h2>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import Magnetic from "./Magnetic";
 import ParallaxLayer from "./ParallaxLayer";
 import WhatsAppButton from "./WhatsAppButton";
 import { company } from "@/lib/site";
@@ -83,6 +84,7 @@ export default function Hero() {
         </p>
 
         <div className="animate-fade-up mt-10 flex flex-col gap-3 [animation-delay:560ms] sm:flex-row sm:items-center sm:gap-4">
+          <Magnetic className="flex [&>*]:w-full sm:inline-flex sm:[&>*]:w-auto">
           <Link
             href="/contact#enquiry"
             className="group inline-flex items-center justify-center gap-2 rounded-[10px] bg-teal px-8 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-teal-700"
@@ -94,8 +96,11 @@ export default function Hero() {
               aria-hidden="true"
             />
           </Link>
+          </Magnetic>
 
-          <WhatsAppButton label="WhatsApp Us" className="px-8" />
+          <Magnetic className="flex [&>*]:w-full sm:inline-flex sm:[&>*]:w-auto">
+            <WhatsAppButton label="WhatsApp Us" className="px-8" />
+          </Magnetic>
         </div>
 
         {/* Discipline strip along the bottom of the frame */}
