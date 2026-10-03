@@ -1,4 +1,4 @@
-import { company } from "./site";
+import { company, enquiryDelivery } from "./site";
 
 export type EnquiryValues = {
   name: string;
@@ -89,4 +89,45 @@ export function buildEnquiryMailto(values: EnquiryValues): string {
   return `mailto:${company.email}?subject=${encodeURIComponent(
     subject,
   )}&body=${encodeURIComponent(body)}`;
+}
+
+export type SubmitResult = "sent" | "fallback";
+
+/**
+ * Delivers an enquiry.
+ *
+ * With an access key configured it posts to Web3Forms, which emails the
+ * message to the company inbox — "sent" means it is on its way and the visitor
+ * needs do nothing more. Without a key, or if the request fails for any reason
+ * (offline, blocked, service down), it returns "fallback" so the caller opens
+ * the visitor's mail app instead. An enquiry is therefore never silently lost.
+ */
+export async function submitEnquiry(values: EnquiryValues): Promise<SubmitResult> {
+  if (!enquiryDelivery.accessKey) return "fallback";
+
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: enquiryDelivery.accessKey,
+        subject: `Enquiry: ${values.service} — ${values.name.trim()}`,
+        from_name: `${values.name.trim()} (website enquiry)`,
+        name: values.name.trim(),
+        // Web3Forms uses "email" as the reply-to, so Reply goes to the visitor.
+        email: values.email.trim(),
+        phone: values.phone.trim(),
+        company: values.companyName.trim() || "Not given",
+        service: values.service,
+        message: values.message.trim(),
+        // Honeypot: real visitors never see or fill this, bots usually do.
+        botcheck: "",
+      }),
+    });
+
+    const result = (await response.json()) as { success?: boolean };
+    return response.ok && result.success ? "sent" : "fallback";
+  } catch {
+    return "fallback";
+  }
 }

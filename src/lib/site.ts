@@ -502,7 +502,31 @@ export const testimonials: Testimonial[] = [];
 /*  ENQUIRY FORM OPTIONS                                                      */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The four trades the homepage headline leads with come first, in the same
+ * order, so a visitor can pick the way the site describes the work. The
+ * detailed licensed services follow.
+ */
 export const serviceOptions: string[] = [
+  "Civil Works",
+  "Fit-Out Works",
+  "MEP",
+  "HVAC",
   ...services.map((s) => s.title),
   "General Enquiry",
 ];
+
+/**
+ * Enquiry delivery.
+ *
+ * Web3Forms emails each submission straight to the address it was registered
+ * with, with no server on our side. The access key is meant to be public — it
+ * only lets a form post to that one inbox — so it lives here in the client
+ * bundle. Leave it empty and the form falls back to opening the visitor's mail
+ * app, so nothing breaks before the key is added.
+ *
+ * Get a key: web3forms.com, enter triobuiltgulf@gmail.com, paste the emailed key.
+ */
+export const enquiryDelivery = {
+  accessKey: "",
+};

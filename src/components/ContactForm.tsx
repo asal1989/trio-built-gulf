@@ -24,6 +24,7 @@ import { company, serviceOptions } from "@/lib/site";
 import {
   buildEnquiryMailto,
   emptyEnquiry,
+  submitEnquiry,
   validateEnquiry,
   type EnquiryErrors,
   type EnquiryValues,
@@ -55,7 +56,9 @@ export default function ContactForm() {
   const uid = useId();
   const [values, setValues] = useState<EnquiryValues>(emptyEnquiry);
   const [errors, setErrors] = useState<EnquiryErrors>({});
-  const [submitted, setSubmitted] = useState(false);
+  /** null until sent; "sent" = delivered to the inbox, "fallback" = mail app opened. */
+  const [outcome, setOutcome] = useState<"sent" | "fallback" | null>(null);
+  const [sending, setSending] = useState(false);
 
   const fieldId = (name: keyof EnquiryValues) => `${uid}-${name}`;
   const errorId = (name: keyof EnquiryValues) => `${uid}-${name}-error`;
@@ -66,7 +69,7 @@ export default function ContactForm() {
     setErrors((prev) => (prev[name] ? { ...prev, [name]: undefined } : prev));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const nextErrors = validateEnquiry(values);
@@ -81,8 +84,11 @@ export default function ContactForm() {
       return;
     }
 
-    window.location.href = buildEnquiryMailto(values);
-    setSubmitted(true);
+    setSending(true);
+    const result = await submitEnquiry(values);
+    if (result === "fallback") window.location.href = buildEnquiryMailto(values);
+    setSending(false);
+    setOutcome(result);
   };
 
   const fieldClass = (name: keyof EnquiryValues) =>
@@ -98,8 +104,14 @@ export default function ContactForm() {
         <Assurances />
 
         <div className="min-w-0">
-          {submitted ? (
-            <Sent onReset={() => { setValues(emptyEnquiry); setSubmitted(false); }} />
+          {outcome ? (
+            <Sent
+              outcome={outcome}
+              onReset={() => {
+                setValues(emptyEnquiry);
+                setOutcome(null);
+              }}
+            />
           ) : (
             <form onSubmit={handleSubmit} noValidate>
               <div className="grid gap-6 p-7 sm:grid-cols-2 sm:p-9">
@@ -230,14 +242,15 @@ export default function ContactForm() {
               <div className="flex flex-col gap-5 border-t border-line bg-mist px-7 py-6 sm:flex-row sm:items-center sm:px-9">
                 <button
                   type="submit"
-                  className="group inline-flex items-center justify-center gap-3 rounded-lg bg-navy px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-teal"
+                  disabled={sending}
+                  className="group inline-flex items-center justify-center gap-3 rounded-lg bg-navy px-7 py-4 font-display text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-teal disabled:cursor-wait disabled:opacity-70"
                 >
                   <SendHorizontal
                     className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
                     strokeWidth={2}
                     aria-hidden="true"
                   />
-                  Send Enquiry
+                  {sending ? "Sending…" : "Send Enquiry"}
                 </button>
 
                 <p className="flex items-center gap-3 text-xs leading-relaxed text-navy/70">
@@ -334,7 +347,13 @@ function Assurances() {
 }
 
 /** Shown once the visitor's email client has been handed the enquiry. */
-function Sent({ onReset }: { onReset: () => void }) {
+function Sent({
+  outcome,
+  onReset,
+}: {
+  outcome: "sent" | "fallback";
+  onReset: () => void;
+}) {
   return (
     <div role="status" className="flex h-full flex-col items-start p-8 sm:p-10">
       <CheckCircle2
@@ -343,12 +362,14 @@ function Sent({ onReset }: { onReset: () => void }) {
         aria-hidden="true"
       />
       <h3 className="mt-6 text-2xl font-bold text-navy">
-        Your enquiry is ready to send
+        {outcome === "sent"
+          ? "Thank you — your enquiry has been sent"
+          : "Your enquiry is ready to send"}
       </h3>
       <p className="mt-4 max-w-md text-pretty text-sm leading-relaxed text-navy/65">
-        We have opened your email application with the enquiry pre-filled. Press
-        send there and our team will come back to you. If nothing opened,
-        message us directly on WhatsApp instead.
+        {outcome === "sent"
+          ? "Our team has received your details and will come back to you shortly. If it is urgent, message us directly on WhatsApp."
+          : "We have opened your email application with the enquiry pre-filled. Press send there and our team will come back to you. If nothing opened, message us directly on WhatsApp instead."}
       </p>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
