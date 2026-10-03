@@ -15,7 +15,8 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "typecheck": "tsc --noEmit",
-    "admin:create": "tsx scripts/create-admin.ts"
+    "admin:create": "tsx scripts/create-admin.ts",
+    "db:seed:media": "tsx --conditions=react-server scripts/import-site-images.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1146.0",
