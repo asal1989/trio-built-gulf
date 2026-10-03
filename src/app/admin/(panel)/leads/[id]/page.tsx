@@ -138,7 +138,7 @@ export default async function LeadProfilePage({ params }: { params: Promise<{ id
                     <span className="min-w-0 truncate">
                       📎 <span className="font-medium text-navy">{a.fileName}</span> <span className="text-navy/50">({size(a.size)})</span>
                     </span>
-                    <a href={`/api/admin/attachments/${a.id}`} className={button("secondary", true)}>
+                    <a href={`/api/admin/attachments/${a.id}/`} className={button("secondary", true)}>
                       Download
                     </a>
                   </li>
