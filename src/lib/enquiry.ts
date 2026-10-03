@@ -5,7 +5,13 @@ export type EnquiryValues = {
   companyName: string;
   email: string;
   phone: string;
+  whatsapp: string;
   service: string;
+  projectType: string;
+  location: string;
+  area: string;
+  startDate: string;
+  budget: string;
   message: string;
 };
 
@@ -16,7 +22,13 @@ export const emptyEnquiry: EnquiryValues = {
   companyName: "",
   email: "",
   phone: "",
+  whatsapp: "",
   service: "",
+  projectType: "",
+  location: "",
+  area: "",
+  startDate: "",
+  budget: "",
   message: "",
 };
 
@@ -48,6 +60,10 @@ export function validateEnquiry(values: EnquiryValues): EnquiryErrors {
     }
   }
 
+  if (values.whatsapp.trim() && !/^[+0-9()\-.\s]{7,24}$/.test(values.whatsapp.trim())) {
+    errors.whatsapp = "Please enter a valid WhatsApp number.";
+  }
+
   if (!values.service) {
     errors.service = "Please select the service you need.";
   }
@@ -77,7 +93,13 @@ export function buildEnquiryMailto(values: EnquiryValues): string {
     `Company: ${values.companyName.trim() || "—"}`,
     `Email: ${values.email.trim()}`,
     `Phone: ${values.phone.trim() || "—"}`,
+    `WhatsApp: ${values.whatsapp.trim() || "—"}`,
     `Service required: ${values.service}`,
+    `Project type: ${values.projectType || "—"}`,
+    `Location: ${values.location.trim() || "—"}`,
+    `Approx. area: ${values.area.trim() || "—"}`,
+    `Expected start: ${values.startDate || "—"}`,
+    `Budget: ${values.budget || "—"}`,
     "",
     "Message:",
     values.message.trim(),

@@ -22,7 +22,7 @@ export default async function LoginPage() {
 
       <div className="relative w-full max-w-md">
         <div className="mb-8 flex justify-center">
-          <Image src="/images/logo-full-light.c79eecc0.png" alt="Trio Built Gulf Technical Services LLC" width={700} height={502} priority className="h-auto w-44" />
+          <Image src="/images/logo-full-light.c79eecc0.png" alt="Trio Built Gulf Technical Services LLC" width={700} height={502} priority unoptimized className="h-auto w-44" />
         </div>
         <div className="rounded-2xl border border-white/10 bg-white p-7 shadow-2xl sm:p-9">
           <span aria-hidden="true" className="block h-[3px] w-10 bg-gold" />

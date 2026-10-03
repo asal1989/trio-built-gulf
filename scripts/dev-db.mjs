@@ -20,6 +20,7 @@ const pg = new EmbeddedPostgres({
   password: "postgres",
   port,
   persistent: true,
+  initdbFlags: ["--encoding=UTF8", "--locale=C"],
 });
 
 if (fresh) await pg.initialise();
