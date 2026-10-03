@@ -6,6 +6,12 @@ Built with Next.js (App Router), TypeScript, Tailwind CSS v4 and Lucide icons.
 
 ---
 
+> **Admin panel:** the site now runs as a Next.js server with a database-backed
+> CMS + CRM at `/admin`. Setup, deployment, email, storage and the security
+> checklist are in [docs/ADMIN.md](docs/ADMIN.md).
+
+---
+
 ## Running the site
 
 ```bash
@@ -20,8 +26,8 @@ npm run dev
 npm run build
 ```
 
-`npm run build` produces a fully static site — every page is prerendered, so it
-can be deployed to Vercel, Netlify, Cloudflare Pages or any static host.
+`npm run build` builds the Next.js server application (it no longer produces a
+static export). It needs a PostgreSQL database at runtime — see docs/ADMIN.md.
 
 ---
 
