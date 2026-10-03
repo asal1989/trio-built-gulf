@@ -3,7 +3,7 @@ import { z } from "zod";
 import { AuthError, requirePermission, type SessionUser } from "./auth/session";
 import type { Permission } from "./auth/permissions";
 
-export type ActionResult = { error?: string; ok?: string; fieldErrors?: Record<string, string>; id?: string };
+export type ActionResult = { error?: string; ok?: string; fieldErrors?: Record<string, string>; id?: string; data?: Record<string, string> };
 
 /** Turn zod issues into { field: message }. */
 export function fieldErrorsFrom(error: z.ZodError): Record<string, string> {

@@ -60,13 +60,7 @@ export async function updateMedia(_prev: ActionResult | undefined, fd: FormData)
     const current = await db.media.findUnique({ where: { id: d.id } });
     if (!current) return { error: "File not found." };
 
-    // Visibility moves the file between the public and private key spaces only
-    // through re-upload; here we only flip the flag when asked and the key is compatible.
     const wantPublic = fd.get("isPublic") === "on";
-    const compatible = current.storageKey.startsWith(wantPublic ? "media/" : "private/") || wantPublic === current.isPublic;
-    if (wantPublic !== current.isPublic && !compatible) {
-      return { error: "To change visibility of this file, upload it again with the right setting." };
-    }
 
     await db.media.update({
       where: { id: d.id },

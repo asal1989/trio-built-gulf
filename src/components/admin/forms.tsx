@@ -6,7 +6,7 @@ import { button } from "./ui";
 
 /* Client-side form + feedback primitives for the admin panel. */
 
-export type ActionState = { error?: string; ok?: string; fieldErrors?: Record<string, string>; id?: string } | undefined;
+export type ActionState = { error?: string; ok?: string; fieldErrors?: Record<string, string>; id?: string; data?: Record<string, string> } | undefined;
 
 /* ----------------------------- Toasts ---------------------------------- */
 
