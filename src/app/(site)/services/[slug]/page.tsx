@@ -6,16 +6,10 @@ import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import CTASection from "@/components/CTASection";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
-import { SITE_URL, breadcrumbSchema, pageMetadata } from "@/lib/seo";
-import { servicePageBySlug, servicePages } from "@/lib/service-pages";
-import { company, whatsappLink } from "@/lib/site";
-
-// Every service page is prerendered at build time (the site is a static export).
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return servicePages.map((p) => ({ slug: p.slug }));
-}
+import { SITE_URL, breadcrumbSchema } from "@/lib/seo";
+import { whatsappLink } from "@/lib/site";
+import { getCompany, getPublishedServices, getServiceBySlug } from "@/server/content/public";
+import { pageMeta } from "@/server/content/seo";
 
 export async function generateMetadata({
   params,
@@ -23,13 +17,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const page = servicePageBySlug(slug);
+  const page = await getServiceBySlug(slug);
   if (!page) return {};
-  return pageMetadata({
-    path: `/services/${page.slug}/`,
-    title: page.metaTitle,
-    description: page.metaDescription,
-  });
+  return pageMeta({ path: `/services/${page.slug}/`, title: page.metaTitle, description: page.metaDescription });
 }
 
 export default async function ServicePageRoute({
@@ -38,8 +28,9 @@ export default async function ServicePageRoute({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const page = servicePageBySlug(slug);
+  const page = await getServiceBySlug(slug);
   if (!page) notFound();
+  const [company, all] = await Promise.all([getCompany(), getPublishedServices()]);
 
   const url = `${SITE_URL}/services/${page.slug}/`;
 
@@ -75,7 +66,7 @@ export default async function ServicePageRoute({
   ]);
 
   const related = page.related
-    .map((s) => servicePageBySlug(s))
+    .map((slugName) => all.find((x) => x.slug === slugName))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   const wa = whatsappLink(company.phone.whatsapp, page.whatsappMessage);

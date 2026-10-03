@@ -3,9 +3,15 @@ import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import Reveal from "./Reveal";
 import { WhatsAppGlyph } from "./WhatsAppButton";
-import { company, defaultWhatsAppMessage, whatsappLink } from "@/lib/site";
+import { defaultWhatsAppMessage, whatsappLink } from "@/lib/site";
+import { getCompany, getContent } from "@/server/content/public";
 
-export default function CTASection() {
+export default async function CTASection() {
+  const [company, copy] = await Promise.all([
+    getCompany(),
+    getContent<{ ctaHeading: string; ctaText: string }>("home"),
+  ]);
+  const headingParts = copy.ctaHeading.split("|").map((p) => p.trim()).filter(Boolean);
   return (
     <section
       id="contact-cta"
@@ -42,13 +48,14 @@ export default function CTASection() {
                 id="cta-heading"
                 className="mt-7 text-[clamp(2.25rem,6.2vw,4.5rem)] font-extrabold uppercase leading-[1.02] text-white"
               >
-                Need a technical
-                <br />
-                <span className="text-teal-300">service?</span>
+                {headingParts.map((part, i) => (
+                  <span key={i} className={i === headingParts.length - 1 && headingParts.length > 1 ? "block text-teal-300" : "block"}>
+                    {part}
+                  </span>
+                ))}
               </h2>
               <p className="mt-7 max-w-xl text-pretty text-base leading-relaxed text-white/65 sm:text-lg">
-                Installation, repair or maintenance in Dubai &mdash; message our
-                Dubai team directly on WhatsApp and tell us what you need.
+                {copy.ctaText}
               </p>
             </Reveal>
 

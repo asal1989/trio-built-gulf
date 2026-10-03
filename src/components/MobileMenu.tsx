@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone, X } from "lucide-react";
 import Logo from "./Logo";
-import { company, navLinks } from "@/lib/site";
+import { navLinks } from "@/lib/site";
+import type { SiteContact } from "@/lib/site-contact";
 
 /**
  * White, matching the header, so the navy logo and links read at full
@@ -13,9 +14,11 @@ import { company, navLinks } from "@/lib/site";
 export default function MobileMenu({
   open,
   onClose,
+  company,
 }: {
   open: boolean;
   onClose: () => void;
+  company: SiteContact;
 }) {
   useEffect(() => {
     if (!open) return;

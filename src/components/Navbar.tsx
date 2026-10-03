@@ -6,14 +6,15 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, Phone } from "lucide-react";
 import Logo from "./Logo";
 import MobileMenu from "./MobileMenu";
-import { company, navLinks } from "@/lib/site";
+import { navLinks } from "@/lib/site";
+import type { SiteContact } from "@/lib/site-contact";
 
 /**
  * The bar is white so the navy logo reads at full contrast and the dark hero
  * below it stays clearly separated. It stays solid at every scroll position —
  * a transparent bar would drop the navy logo onto the hero photograph.
  */
-export default function Navbar() {
+export default function Navbar({ company }: { company: SiteContact }) {
   const pathname = usePathname();
 
   const [scrolled, setScrolled] = useState(false);
@@ -137,7 +138,7 @@ export default function Navbar() {
       {/* Spacer — the header is fixed, so every page starts below it. */}
       <div aria-hidden="true" className="h-[132px] sm:h-[156px] lg:h-[196px]" />
 
-      <MobileMenu open={menuOpen} onClose={closeMenu} />
+      <MobileMenu open={menuOpen} onClose={closeMenu} company={company} />
     </>
   );
 }

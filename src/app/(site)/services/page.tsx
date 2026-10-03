@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { breadcrumbSchema, servicesSchema, pageMetadata } from "@/lib/seo";
+import { SITE_URL, breadcrumbSchema } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
@@ -7,17 +7,41 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import ServiceCard from "@/components/ServiceCard";
-import { servicePages } from "@/lib/service-pages";
+import { getContent, getPublishedServices } from "@/server/content/public";
+import { pageMeta } from "@/server/content/seo";
 import { services } from "@/lib/site";
 
-export const metadata: Metadata = pageMetadata({
-  path: "/services",
-  title: "Technical Services Dubai | MEP, HVAC, Ceilings, Plumbing & Electrical",
-  description:
-    "Eleven licensed technical services in Dubai and the UAE: false ceilings, HVAC and ventilation, plumbing, electrical, painting, tiling, carpentry, glass and aluminium, steel and plaster works.",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMeta({
+    path: "/services/",
+    title: "Technical Services Dubai | MEP, HVAC, Ceilings, Plumbing & Electrical",
+    description:
+      "Eleven licensed technical services in Dubai and the UAE: false ceilings, HVAC and ventilation, plumbing, electrical, painting, tiling, carpentry, glass and aluminium, steel and plaster works.",
+  });
+}
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const [copy, servicePages] = await Promise.all([
+    getContent<{ eyebrow: string; title: string; accent: string; subtitle: string; guidesHeading: string; guidesIntro: string }>("services"),
+    getPublishedServices(),
+  ]);
+  const servicesSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Trio Built Gulf services in Dubai",
+    itemListElement: servicePages.map((svc, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Service",
+        name: svc.label,
+        description: svc.summary,
+        provider: { "@id": `${SITE_URL}/#organisation` },
+        areaServed: { "@type": "City", name: "Dubai" },
+        url: `${SITE_URL}/services/${svc.slug}/`,
+      },
+    })),
+  };
   return (
     <>
       <script
@@ -29,13 +53,13 @@ export default function ServicesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
       />
       <PageHeader
-        eyebrow="What we do"
+        eyebrow={copy.eyebrow}
         title={
           <>
-            Our core <span className="text-teal-300">services</span>
+            {copy.title} <span className="text-teal-300">{copy.accent}</span>
           </>
         }
-        subtitle="Eleven licensed technical activities, delivered as a single coordinated scope or as a standalone trade."
+        subtitle={copy.subtitle}
         image="/images/feat-mep.jpg"
         imageAlt="Commercial office interior with exposed ceiling services and ventilation ductwork"
       />
@@ -122,13 +146,10 @@ export default function ServicesPage() {
           <Reveal>
             <span className="eyebrow text-teal-700">Technical services in Dubai</span>
             <h2 className="mt-5 max-w-3xl text-[clamp(1.75rem,4vw,2.75rem)] font-extrabold leading-tight text-navy">
-              Find the service you need
+              {copy.guidesHeading}
             </h2>
             <p className="mt-5 max-w-3xl text-pretty text-base leading-relaxed text-navy/70 sm:text-lg">
-              Trio Built Gulf provides technical services in Dubai for offices,
-              retail, hospitality, residential and industrial properties —
-              from a single trade to a coordinated scope. Each guide below
-              explains what the work covers, when you need it and how we deliver it.
+              {copy.guidesIntro}
             </p>
           </Reveal>
           <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,42 +1,31 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
-import { servicePages } from "@/lib/service-pages";
+import { getAllSeo, getPublishedProjects, getPublishedServices } from "@/server/content/public";
 
 /**
- * Generated at build time into a static `sitemap.xml`, matching the static
- * export the rest of the site uses. URLs are absolute against the production
- * domain (see `SITE_URL` in `seo.ts`) rather than the GitHub Pages address
- * this currently deploys to — the canonical links and structured data already
- * follow the same convention, so a search engine reading any of them agrees.
+ * Generated from the database at request time, so a service published in the
+ * admin appears here immediately. Pages an admin has set to "noindex" are left out.
  */
+export const dynamic = "force-dynamic";
 
-const routes = [
-  "",
-  "/about",
-  "/services",
-  ...servicePages.map((p) => `/services/${p.slug}`),
-  "/projects",
-  "/why-us",
-  "/careers",
-  "/contact",
-];
+const STATIC_ROUTES = ["", "/about", "/services", "/projects", "/industries", "/maintenance", "/why-us", "/careers", "/contact"];
 
-// Required for `output: "export"` — without it the build treats this route as
-// dynamic and refuses to prerender it into a static file.
-export const dynamic = "force-static";
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [services, projects, seo] = await Promise.all([getPublishedServices(), getPublishedProjects(), getAllSeo()]);
   const lastModified = new Date();
 
-  return routes.map((route) => ({
-    url: `${SITE_URL}${route}/`,
-    lastModified,
-    changeFrequency: route === "" ? "weekly" : "monthly",
-    priority:
-      route === ""
-        ? 1
-        : route === "/contact" || route.startsWith("/services/")
-          ? 0.9
-          : 0.8,
-  }));
+  const routes = [
+    ...STATIC_ROUTES,
+    ...services.map((s) => `/services/${s.slug}`),
+    ...(projects ?? []).filter(() => false).map((p) => `/projects/${p.slug}`), // project detail pages are not public yet
+  ];
+
+  return routes
+    .filter((route) => !/noindex/i.test(seo[`${route}/`.replace(/^\/\/$/, "/")]?.robots ?? ""))
+    .map((route) => ({
+      url: `${SITE_URL}${route}/`,
+      lastModified,
+      changeFrequency: route === "" ? "weekly" : "monthly",
+      priority: route === "" ? 1 : route === "/contact" || route.startsWith("/services/") ? 0.9 : 0.8,
+    }));
 }

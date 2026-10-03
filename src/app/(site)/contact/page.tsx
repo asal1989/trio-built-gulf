@@ -1,21 +1,30 @@
 import type { Metadata } from "next";
-import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { breadcrumbSchema } from "@/lib/seo";
 import Image from "next/image";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
 import ContactForm from "@/components/ContactForm";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import Reveal from "@/components/Reveal";
-import { company } from "@/lib/site";
+import { getCompany, getContent, getPublishedServices } from "@/server/content/public";
+import { pageMeta } from "@/server/content/seo";
 
-export const metadata: Metadata = pageMetadata({
-  path: "/contact",
-  title: "Contact Trio Built Gulf | Get a Quote in Dubai, UAE",
-  description:
-    "Request a quote from Trio Built Gulf Technical Services LLC in Dubai. Call +971 52 507 3289, WhatsApp or email for MEP, HVAC, interior finishing and maintenance enquiries.",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const company = await getCompany();
+  return pageMeta({
+    path: "/contact/",
+    title: "Contact Trio Built Gulf | Get a Quote in Dubai, UAE",
+    description: `Request a quote from Trio Built Gulf Technical Services LLC in Dubai. Call ${company.phone.label}, WhatsApp or email for MEP, HVAC, interior finishing and maintenance enquiries.`,
+  });
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const [company, copy, services] = await Promise.all([
+    getCompany(),
+    getContent<{ eyebrow: string; title: string; accent: string; subtitle: string }>("contact"),
+    getPublishedServices(),
+  ]);
+  const serviceOptions = [...services.map((x) => x.name), "Maintenance / AMC", "General Enquiry"];
   return (
     <>
       <script
@@ -50,17 +59,16 @@ export default function ContactPage() {
 
         <div className="shell relative">
           <span className="eyebrow text-teal-300">
-            {company.city} &bull; {company.country}
+            {copy.eyebrow || `${company.city} • ${company.country}`}
           </span>
           <h1
             id="contact-heading"
             className="mt-7 max-w-4xl text-[clamp(2.25rem,6.5vw,4.75rem)] font-extrabold uppercase leading-[1.02] text-white"
           >
-            Contact <span className="text-teal-300">Trio Built Gulf</span>
+            {copy.title} <span className="text-teal-300">{copy.accent}</span>
           </h1>
           <p className="mt-7 max-w-2xl text-pretty text-base leading-relaxed text-white/65 sm:text-lg">
-            Tell us about your technical service, installation or maintenance
-            requirement and our team will come back to you.
+            {copy.subtitle}
           </p>
         </div>
       </section>
@@ -104,24 +112,20 @@ export default function ContactPage() {
                         Telephone
                       </dt>
                       <dd className="mt-2 space-y-2">
-                        <a
-                          href={company.phone.href}
-                          className="block text-base text-navy transition-colors hover:text-teal-700"
-                        >
-                          {company.phone.label}
-                          <span className="ml-2 text-[11px] uppercase tracking-[0.14em] text-navy/45">
-                            Co-Founder
-                          </span>
-                        </a>
-                        <a
-                          href={company.phoneAlt.href}
-                          className="block text-base text-navy transition-colors hover:text-teal-700"
-                        >
-                          {company.phoneAlt.label}
-                          <span className="ml-2 text-[11px] uppercase tracking-[0.14em] text-navy/45">
-                            Co-Founder
-                          </span>
-                        </a>
+                        {company.phones.map((p) => (
+                          <a
+                            key={p.number}
+                            href={p.href}
+                            className="block text-base text-navy transition-colors hover:text-teal-700"
+                          >
+                            {p.number}
+                            {p.role ? (
+                              <span className="ml-2 text-[11px] uppercase tracking-[0.14em] text-navy/45">
+                                {p.role}
+                              </span>
+                            ) : null}
+                          </a>
+                        ))}
                       </dd>
                     </div>
                   </div>
@@ -158,7 +162,7 @@ export default function ContactPage() {
                         Service Support
                       </dt>
                       <dd className="mt-2 text-base text-navy">
-                        24/7 service support
+                        {company.hours || "24/7 service support"}
                       </dd>
                     </div>
                   </div>
@@ -175,7 +179,7 @@ export default function ContactPage() {
                     same number.
                   </p>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                    <WhatsAppButton />
+                    <WhatsAppButton phone={company.phone.whatsapp} />
                   </div>
                 </div>
               </Reveal>
@@ -225,7 +229,7 @@ export default function ContactPage() {
           <div className="overflow-hidden rounded-2xl border border-line">
             <iframe
               title={`${company.legalName} location in ${company.location}`}
-              src="https://www.google.com/maps?q=Dubai,+United+Arab+Emirates&output=embed"
+              src={company.mapsUrl || "https://www.google.com/maps?q=Dubai,+United+Arab+Emirates&output=embed"}
               className="h-[360px] w-full"
               style={{ border: 0 }}
               loading="lazy"
@@ -261,7 +265,7 @@ export default function ContactPage() {
           </Reveal>
 
           <Reveal delay={100} className="mt-12">
-            <ContactForm />
+            <ContactForm serviceOptions={serviceOptions} phone={company.phone} />
           </Reveal>
         </div>
       </section>

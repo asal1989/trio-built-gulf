@@ -9,9 +9,22 @@ import StatCard from "@/components/StatCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import CTASection from "@/components/CTASection";
 
-import { featured, stats, testimonials } from "@/lib/site";
+import { featured, stats } from "@/lib/site";
+import { getPublishedTestimonials } from "@/server/content/public";
+import { pageMeta } from "@/server/content/seo";
+import type { Metadata } from "next";
 
-export default function HomePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMeta({
+    path: "/",
+    title: "Trio Built Gulf | MEP, HVAC & Building Maintenance Services in Dubai",
+    description:
+      "Trio Built Gulf Technical Services LLC provides professional technical installation, maintenance, MEP, HVAC, interior finishing and building services in Dubai, UAE.",
+  });
+}
+
+export default async function HomePage() {
+  const testimonials = await getPublishedTestimonials();
   return (
     <>
       <Hero />
@@ -197,8 +210,15 @@ export default function HomePage() {
             />
             <ul className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((testimonial, i) => (
-                <Reveal as="li" key={testimonial.author} delay={i * 90}>
-                  <TestimonialCard testimonial={testimonial} />
+                <Reveal as="li" key={testimonial.name} delay={i * 90}>
+                  <TestimonialCard
+                    testimonial={{
+                      quote: testimonial.quote,
+                      author: testimonial.name,
+                      role: testimonial.position,
+                      company: testimonial.company,
+                    }}
+                  />
                 </Reveal>
               ))}
             </ul>

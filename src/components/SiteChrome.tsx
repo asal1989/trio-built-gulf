@@ -1,66 +1,54 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
-import { company } from "@/lib/site";
 import { SITE_URL, websiteSchema } from "@/lib/seo";
+import { getCompany, getPublishedServices, type CompanyInfo } from "@/server/content/public";
 
-/** LocalBusiness structured data for local search. */
-const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
-  "@id": `${SITE_URL}/#organisation`,
-  name: company.legalName,
-  alternateName: company.name,
-  url: SITE_URL,
-  email: company.email,
-  telephone: company.phone.label,
-  image: `${SITE_URL}/images/hero-dubai.jpg`,
-  logo: `${SITE_URL}/images/logo.png`,
-  description:
-    "Trio Built Gulf Technical Services LLC provides professional technical installation, maintenance, MEP, HVAC, interior finishing and building services in Dubai, UAE.",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: company.address.locality,
-    addressRegion: company.address.region,
-    addressCountry: company.address.country,
-  },
-  areaServed: [
-    { "@type": "City", name: "Dubai" },
-    { "@type": "Country", name: "United Arab Emirates" },
-  ],
-  contactPoint: [
-    {
+/** LocalBusiness structured data for local search, built from the CMS settings. */
+function localBusinessSchema(c: CompanyInfo, serviceNames: string[]) {
+  const sameAs = Object.values(c.social).filter(Boolean);
+  return {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
+    "@id": `${SITE_URL}/#organisation`,
+    name: c.legalName,
+    alternateName: c.name,
+    url: SITE_URL,
+    email: c.email,
+    telephone: c.phone.label,
+    image: `${SITE_URL}/images/hero-dubai.jpg`,
+    logo: `${SITE_URL}/images/logo.png`,
+    description:
+      "Trio Built Gulf Technical Services LLC provides professional technical installation, maintenance, MEP, HVAC, interior finishing and building services in Dubai, UAE.",
+    address: {
+      "@type": "PostalAddress",
+      ...(c.address.street ? { streetAddress: c.address.street } : {}),
+      addressLocality: c.address.locality,
+      addressRegion: c.address.region,
+      addressCountry: c.address.country,
+    },
+    ...(c.hours ? { openingHours: c.hours } : {}),
+    ...(sameAs.length ? { sameAs } : {}),
+    areaServed: [
+      { "@type": "City", name: "Dubai" },
+      { "@type": "Country", name: "United Arab Emirates" },
+    ],
+    contactPoint: c.phones.map((p, i) => ({
       "@type": "ContactPoint",
-      telephone: company.phone.label,
-      contactType: "customer service",
+      telephone: p.number,
+      contactType: i === 0 ? "customer service" : "sales",
       areaServed: "AE",
       availableLanguage: ["English"],
-    },
-    {
-      "@type": "ContactPoint",
-      telephone: company.phoneAlt.label,
-      contactType: "sales",
-      areaServed: "AE",
-      availableLanguage: ["English"],
-    },
-  ],
-  knowsAbout: [
-    "False ceiling and light partitions installation",
-    "Air-conditioning, ventilation and air filtration",
-    "Systems installation and maintenance",
-    "Painting contract",
-    "Steel products installation and maintenance",
-    "Glass and aluminum installation and maintenance",
-    "Floor and wall tiling works",
-    "Plumbing and sanitary installations",
-    "Carpentry and wood flooring works",
-    "Electrical fittings and fixtures repairing and maintenance",
-    "Plaster works",
-  ],
-};
+    })),
+    knowsAbout: serviceNames,
+  };
+}
 
 /** Header, footer, floating WhatsApp button and site-wide structured data. */
-export default function SiteChrome({ children }: { children: React.ReactNode }) {
+export default async function SiteChrome({ children }: { children: React.ReactNode }) {
+  const [company, services] = await Promise.all([getCompany(), getPublishedServices()]);
+  const serviceMessages = Object.fromEntries(services.map((s) => [s.slug, s.whatsappMessage]));
+
   return (
     <>
       <a
@@ -70,21 +58,17 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
         Skip to content
       </a>
 
-      <Navbar />
+      <Navbar company={{ city: company.city, country: company.country, location: company.location, email: company.email, phone: company.phone }} />
       <main id="main">{children}</main>
       <Footer />
-      <FloatingWhatsApp />
+      <FloatingWhatsApp whatsapp={company.phone.whatsapp} serviceMessages={serviceMessages} />
 
       <script
         type="application/ld+json"
         suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema(company, services.map((s) => s.label))) }}
       />
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
     </>
   );
 }

@@ -4,15 +4,18 @@ import { ArrowUpRight, Mail } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import { breadcrumbSchema, pageMetadata } from "@/lib/seo";
-import { company } from "@/lib/site";
+import { breadcrumbSchema } from "@/lib/seo";
+import { getCompany } from "@/server/content/public";
+import { pageMeta } from "@/server/content/seo";
 
-export const metadata: Metadata = pageMetadata({
-  path: "/careers",
-  title: "Careers | Join Trio Built Gulf in Dubai",
-  description:
-    "Interested in working with Trio Built Gulf Technical Services LLC in Dubai? Send your CV for MEP, HVAC, electrical, plumbing, fit-out and maintenance roles.",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMeta({
+    path: "/careers/",
+    title: "Careers | Join Trio Built Gulf in Dubai",
+    description:
+      "Interested in working with Trio Built Gulf Technical Services LLC in Dubai? Send your CV for MEP, HVAC, electrical, plumbing, fit-out and maintenance roles.",
+  });
+}
 
 const trades = [
   "MEP engineers and supervisors",
@@ -23,7 +26,8 @@ const trades = [
   "Maintenance technicians",
 ];
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const company = await getCompany();
   const subject = encodeURIComponent("Career enquiry — Trio Built Gulf");
 
   return (
@@ -99,6 +103,7 @@ export default function CareersPage() {
                 <WhatsAppButton
                   message="Hello Trio Built Gulf, I would like to enquire about career opportunities."
                   label="WhatsApp us"
+                  phone={company.phone.whatsapp}
                 />
                 <Link
                   href="/contact"
