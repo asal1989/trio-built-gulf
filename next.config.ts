@@ -1,27 +1,39 @@
-﻿import type { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 /**
- * The site is fully prerendered and ships as plain files.
+ * The site now runs as a Next.js server (it was a static export) so the admin
+ * panel, the enquiry API and database-backed content can work.
  *
- * GitHub Pages serves a project site from `/<repo>`, so the CI build sets
- * NEXT_PUBLIC_BASE_PATH to that prefix. It is empty for `next dev` and for any
- * host that serves the site from its own domain root.
- *
- * Static hosts have no image optimiser, so a custom loader serves the source
- * files as-is. It also adds the base path, which the built-in `unoptimized`
- * handling leaves off.
+ * Static hosts have no image optimiser, and we serve source files as-is, so a
+ * custom loader keeps image URLs unchanged. NEXT_PUBLIC_BASE_PATH is empty on
+ * our own domain.
  */
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
+const securityHeaders = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Strict-Transport-Security", value: "max-age=31536000" },
+];
+
 const nextConfig: NextConfig = {
-  output: "export",
   basePath,
-  // Emit `contact/index.html` rather than `contact.html` so the paths resolve
-  // on every static host, not only the ones that guess the extension.
+  // `contact/` rather than `contact`, so existing indexed URLs stay valid.
   trailingSlash: true,
+  poweredByHeader: false,
   images: {
     loader: "custom",
     loaderFile: "./src/lib/image-loader.ts",
+  },
+  // Native / large server-only packages are loaded at runtime, not bundled.
+  serverExternalPackages: ["sharp", "pdfkit", "@prisma/client", "pg"],
+  experimental: {
+    serverActions: { bodySizeLimit: "25mb" },
+  },
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
   },
 };
 

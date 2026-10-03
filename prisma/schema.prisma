@@ -1,0 +1,590 @@
+// Trio Built Gulf — CMS + CRM database schema.
+//
+// Design notes
+//  * Content that the public site already had in code (services, projects,
+//    testimonials, contact details…) is seeded from the old data files, so the
+//    site looks identical on day one and is editable from then on.
+//  * Files live in object storage. `Media` holds metadata and the storage key
+//    only — never file bytes.
+//  * Permissions are defined in code (src/server/auth/permissions.ts) per role,
+//    with optional per-user extra grants in `User.extraPermissions`.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Users, sessions, security                                                 */
+/* -------------------------------------------------------------------------- */
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  SALES
+  PROJECT_MANAGER
+  CONTENT_MANAGER
+  VIEWER
+}
+
+model User {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  name             String
+  passwordHash     String
+  role             Role     @default(VIEWER)
+  /// Extra permission codes granted on top of the role (granular overrides).
+  extraPermissions String[] @default([])
+  active           Boolean  @default(true)
+  mustChangePassword Boolean @default(false)
+  lastLoginAt      DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  sessions         Session[]
+  assignedLeads    Lead[]         @relation("LeadAssignee")
+  notes            LeadNote[]
+  activities       LeadActivity[]
+  followUps        FollowUp[]
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  uploads          Media[]
+  quotations       Quotation[]
+
+  @@index([role])
+  @@index([active])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  /// SHA-256 of the session token. The raw token only ever exists in the cookie.
+  tokenHash  String   @unique
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  expiresAt  DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/// Fixed-window counter used for login and public form rate limiting.
+model RateLimit {
+  key      String   @id
+  count    Int      @default(0)
+  resetAt  DateTime
+
+  @@index([resetAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  /// LOGIN, LOGOUT, CREATE, UPDATE, DELETE, STATUS_CHANGE, UPLOAD, USER_CHANGE …
+  action    String
+  entity    String
+  entityId  String?
+  summary   String
+  meta      Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([action])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  /// Null = visible to every admin user.
+  userId    String?
+  type      String
+  title     String
+  body      String?
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([createdAt])
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Leads (CRM)                                                               */
+/* -------------------------------------------------------------------------- */
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  SITE_VISIT
+  QUOTATION_SENT
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum LeadType {
+  QUOTE
+  MAINTENANCE
+  GENERAL
+}
+
+model Lead {
+  id            String     @id @default(cuid())
+  /// Human-friendly sequence; displayed as L-000123.
+  number        Int        @unique @default(autoincrement())
+  status        LeadStatus @default(NEW)
+  type          LeadType   @default(QUOTE)
+  source        String     @default("website")
+
+  name          String
+  company       String?
+  phone         String?
+  whatsapp      String?
+  email         String?
+
+  serviceId     String?
+  /// Service name as submitted (kept even if the service is later renamed).
+  serviceLabel  String?
+  projectType   String?
+  location      String?
+  area          String?
+  expectedStart DateTime?
+  budget        String?
+  message       String?
+
+  assignedToId  String?
+  followUpAt    DateTime?
+  lostReason    String?
+  wonValue      Decimal?   @db.Decimal(14, 2)
+  closedAt      DateTime?
+
+  ip            String?
+  userAgent     String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  service      Service?         @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  assignedTo   User?            @relation("LeadAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  attachments  LeadAttachment[]
+  notes        LeadNote[]
+  activities   LeadActivity[]
+  followUps    FollowUp[]
+  quotations   Quotation[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([assignedToId])
+  @@index([followUpAt])
+  @@index([serviceId])
+  @@index([type])
+}
+
+model LeadAttachment {
+  id          String   @id @default(cuid())
+  leadId      String
+  /// Object-storage key. Private: only reachable through signed URLs.
+  storageKey  String   @unique
+  fileName    String
+  mimeType    String
+  size        Int
+  createdAt   DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  authorId  String?
+  body      String
+  createdAt DateTime @default(now())
+
+  lead   Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+}
+
+model LeadActivity {
+  id        String   @id @default(cuid())
+  leadId    String
+  userId    String?
+  /// CREATED, STATUS, ASSIGNED, NOTE, FOLLOW_UP, EMAIL, CALL, WHATSAPP, QUOTE, ATTACHMENT …
+  type      String
+  summary   String
+  data      Json?
+  createdAt DateTime @default(now())
+
+  lead Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+}
+
+model FollowUp {
+  id           String    @id @default(cuid())
+  leadId       String
+  assignedToId String?
+  dueAt        DateTime
+  note         String?
+  completedAt  DateTime?
+  reminderSentAt DateTime?
+  createdAt    DateTime  @default(now())
+
+  lead       Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  assignedTo User? @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  @@index([dueAt, completedAt])
+  @@index([leadId])
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Quotations                                                                */
+/* -------------------------------------------------------------------------- */
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model Quotation {
+  id            String          @id @default(cuid())
+  /// Human-friendly sequence; displayed as QT-2026-0001.
+  seq           Int             @unique @default(autoincrement())
+  number        String          @unique
+  status        QuotationStatus @default(DRAFT)
+  leadId        String?
+  createdById   String?
+
+  customerName  String
+  companyName   String?
+  email         String?
+  phone         String?
+  projectName   String?
+  projectLocation String?
+  description   String?
+
+  currency      String   @default("AED")
+  /// VAT percentage applied to (subtotal − discount). UAE VAT is 5%.
+  taxRate       Decimal  @default(5) @db.Decimal(5, 2)
+  discount      Decimal  @default(0) @db.Decimal(14, 2)
+  subtotal      Decimal  @default(0) @db.Decimal(14, 2)
+  taxAmount     Decimal  @default(0) @db.Decimal(14, 2)
+  total         Decimal  @default(0) @db.Decimal(14, 2)
+  terms         String?
+  validUntil    DateTime?
+
+  sentAt        DateTime?
+  respondedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  lead      Lead?           @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  createdBy User?           @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  items     QuotationItem[]
+
+  @@index([status])
+  @@index([leadId])
+  @@index([createdAt])
+}
+
+model QuotationItem {
+  id          String  @id @default(cuid())
+  quotationId String
+  position    Int     @default(0)
+  description String
+  quantity    Decimal @default(1) @db.Decimal(12, 2)
+  unit        String  @default("nos")
+  unitPrice   Decimal @default(0) @db.Decimal(14, 2)
+  lineTotal   Decimal @default(0) @db.Decimal(14, 2)
+
+  quotation Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+
+  @@index([quotationId, position])
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Media + documents                                                         */
+/* -------------------------------------------------------------------------- */
+
+enum MediaCategory {
+  PROJECT
+  SERVICE
+  TEAM
+  DOCUMENT
+  CERTIFICATE
+  BROCHURE
+  GENERAL
+}
+
+model Media {
+  id           String        @id @default(cuid())
+  /// Object-storage key (e.g. media/2026/10/ab12cd-site-photo.jpg).
+  storageKey   String        @unique
+  fileName     String
+  originalName String
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  category     MediaCategory @default(GENERAL)
+  alt          String?
+  /// Public media is served through the site; private media only via signed URLs.
+  isPublic     Boolean       @default(true)
+  uploadedById String?
+  createdAt    DateTime      @default(now())
+
+  uploadedBy     User?          @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  serviceCovers  Service[]      @relation("ServiceCover")
+  serviceImages  ServiceImage[]
+  projectCovers  Project[]      @relation("ProjectCover")
+  projectImages  ProjectImage[]
+  testimonials   Testimonial[]
+  documents      Document[]
+  seoImages      SeoMetadata[]
+
+  @@index([category])
+  @@index([mimeType])
+  @@index([createdAt])
+}
+
+enum DocumentType {
+  COMPANY_PROFILE
+  CAPABILITY_STATEMENT
+  BROCHURE
+  CERTIFICATE
+  TRADE_LICENCE
+  OTHER
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  type        DocumentType @default(OTHER)
+  title       String
+  description String?
+  mediaId     String?
+  /// Only documents explicitly marked public are visible on the website.
+  isPublic    Boolean      @default(false)
+  order       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  media Media? @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  @@index([type])
+  @@index([isPublic])
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Services                                                                  */
+/* -------------------------------------------------------------------------- */
+
+model Service {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  /// Short label for menus and cards.
+  label            String
+  shortDescription String
+  fullDescription  String?
+  /// H1 split: lead words plain, accent words highlighted.
+  headingLead      String?
+  headingAccent    String?
+  icon             String   @default("Wrench")
+  coverId          String?
+  /// Rich landing-page sections, stored as JSON arrays:
+  /// intro: string[]; scope: {title,text}[]; when: string[]; approach: {title,text}[]; faqs: {q,a}[]
+  intro            Json     @default("[]")
+  scope            Json     @default("[]")
+  whenTitle        String?
+  whenItems        Json     @default("[]")
+  approach         Json     @default("[]")
+  faqs             Json     @default("[]")
+  whatsappMessage  String?
+  /// Slugs of related services (shown as internal links).
+  related          String[] @default([])
+  seoTitle         String?
+  seoDescription   String?
+  order            Int      @default(0)
+  published        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  cover     Media?           @relation("ServiceCover", fields: [coverId], references: [id], onDelete: SetNull)
+  features  ServiceFeature[]
+  gallery   ServiceImage[]
+  projects  Project[]        @relation("ProjectServices")
+  leads     Lead[]
+
+  @@index([published, order])
+}
+
+model ServiceFeature {
+  id        String  @id @default(cuid())
+  serviceId String
+  text      String
+  order     Int     @default(0)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([serviceId, order])
+}
+
+model ServiceImage {
+  id        String  @id @default(cuid())
+  serviceId String
+  mediaId   String
+  order     Int     @default(0)
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, mediaId])
+  @@index([serviceId, order])
+}
+
+model Industry {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  description String?
+  icon        String  @default("Building2")
+  order       Int     @default(0)
+  published   Boolean @default(true)
+
+  @@index([published, order])
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Projects & testimonials                                                   */
+/* -------------------------------------------------------------------------- */
+
+enum ProjectStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  slug           String        @unique
+  name           String
+  client         String?
+  location       String?
+  projectType    String?
+  status         ProjectStatus @default(ONGOING)
+  startDate      DateTime?
+  completionDate DateTime?
+  description    String?
+  scopeOfWork    String?
+  coverId        String?
+  featured       Boolean       @default(false)
+  published      Boolean       @default(false)
+  order          Int           @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  cover    Media?         @relation("ProjectCover", fields: [coverId], references: [id], onDelete: SetNull)
+  services Service[]      @relation("ProjectServices")
+  gallery  ProjectImage[]
+
+  @@index([published, status])
+  @@index([featured])
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  projectId String
+  mediaId   String
+  caption   String?
+  order     Int     @default(0)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, mediaId])
+  @@index([projectId, order])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  company   String?
+  position  String?
+  quote     String
+  photoId   String?
+  published Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  photo Media? @relation(fields: [photoId], references: [id], onDelete: SetNull)
+
+  @@index([published, order])
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Website content, SEO, settings                                            */
+/* -------------------------------------------------------------------------- */
+
+/// Editable company content sections (intro, vision, mission, values, why us,
+/// industries intro, health & safety, quality, maintenance/AMC…). `data` is a
+/// JSON document whose shape depends on the block key — see src/server/content.
+model ContentBlock {
+  key       String   @id
+  title     String
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+/// Page-level copy (home, about, services, projects, industries, maintenance,
+/// contact, footer) — hero text, headings, CTA wording.
+model Page {
+  slug      String   @id
+  title     String
+  content   Json     @default("{}")
+  updatedAt DateTime @updatedAt
+}
+
+/// SEO per public path ("/", "/about", "/services/hvac-services-dubai" …).
+model SeoMetadata {
+  path           String   @id
+  title          String?
+  description    String?
+  canonicalUrl   String?
+  ogTitle        String?
+  ogDescription  String?
+  ogImageId      String?
+  /// e.g. "index, follow" or "noindex, nofollow"
+  robots         String?
+  updatedAt      DateTime @updatedAt
+
+  ogImage Media? @relation(fields: [ogImageId], references: [id], onDelete: SetNull)
+}
+
+/// Key/value site settings. key "contact" holds phone, WhatsApp, email,
+/// address, map URL, hours and social links.
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}

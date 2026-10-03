@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import SiteChrome from "@/components/SiteChrome";
 
 export default function NotFound() {
   return (
+    <SiteChrome>
     <section className="relative flex min-h-[70svh] items-center overflow-hidden bg-navy-950 py-32">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         <div className="tech-grid absolute -inset-[20%] text-white/[0.05]" />
@@ -39,5 +41,6 @@ export default function NotFound() {
         </div>
       </div>
     </section>
+    </SiteChrome>
   );
 }
