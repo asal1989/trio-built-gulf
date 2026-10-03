@@ -20,11 +20,14 @@ export default function Reveal({
   as: Tag = "div",
   delay = 0,
   className = "",
+  from,
 }: {
   children: ReactNode;
   as?: ElementType;
   delay?: number;
   className?: string;
+  /** Entrance direction. Default is a gentle rise. */
+  from?: "left" | "right" | "scale";
 }) {
   const ref = useRef<HTMLElement>(null);
 
@@ -59,6 +62,7 @@ export default function Reveal({
   return (
     <Tag
       ref={ref}
+      data-from={from}
       className={`reveal ${className}`}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >

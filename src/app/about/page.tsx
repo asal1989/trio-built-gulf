@@ -42,7 +42,7 @@ export default function AboutPage() {
       >
         <div className="shell">
           <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
-            <Reveal className="order-2 lg:order-1">
+            <Reveal from="left" className="order-2 lg:order-1">
               <div className="relative">
                 <div className="plate group aspect-4/5 sm:aspect-square lg:aspect-4/5">
                   <Image

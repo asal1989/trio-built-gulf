@@ -183,7 +183,7 @@ export default function ContactPage() {
 
             {/* Right — reassurance panel */}
             <div className="lg:col-span-7">
-              <Reveal delay={80}>
+              <Reveal from="right" delay={80}>
                 <div className="relative h-full min-h-[320px] overflow-hidden rounded-2xl">
                   <Image
                     src="/images/contact-plans.jpg"

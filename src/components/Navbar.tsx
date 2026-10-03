@@ -77,7 +77,9 @@ export default function Navbar() {
         }`}
       >
         <div className="shell flex h-[132px] items-center justify-between gap-4 sm:h-[156px] xl:gap-8">
-          <Logo />
+          <span className="animate-fade inline-flex [animation-delay:150ms]">
+            <Logo />
+          </span>
 
           <nav aria-label="Primary" className="hidden lg:block">
             <ul className="flex items-center gap-1">
