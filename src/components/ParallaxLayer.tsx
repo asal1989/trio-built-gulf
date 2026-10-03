@@ -9,7 +9,7 @@ import { useEffect, useRef, type ReactNode } from "react";
  */
 export default function ParallaxLayer({
   children,
-  speed = 0.22,
+  speed = 0.35,
   className = "",
 }: {
   children: ReactNode;

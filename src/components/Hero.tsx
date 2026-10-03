@@ -57,7 +57,7 @@ export default function Hero() {
 
       {/* Content */}
       <div className="shell relative w-full">
-        <span aria-hidden="true" className="animate-draw mb-6 block h-[3px] w-24 bg-gold [animation-delay:150ms]" />
+        <span aria-hidden="true" className="animate-draw mb-6 block h-1 w-40 bg-gold [animation-delay:150ms]" />
         <p className="animate-fade-up eyebrow text-teal-300 [animation-delay:120ms]">
           {company.city} &bull; {company.country}
         </p>
