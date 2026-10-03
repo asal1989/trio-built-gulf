@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
 import { company } from "@/lib/site";
-import { SITE_URL, websiteSchema } from "@/lib/seo";
+import { SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const manrope = Manrope({

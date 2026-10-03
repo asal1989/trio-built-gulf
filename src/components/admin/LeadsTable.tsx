@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { bulkLeadAction } from "@/app/admin/(panel)/leads/actions";
 import { LEAD_STATUS_LABELS, LEAD_STATUS_ORDER } from "@/lib/enquiry-options";
+import { nowMs } from "@/lib/time";
 import { ActionForm, SubmitButton } from "./forms";
 import { leadCode, StatusBadge, TYPE_LABEL } from "./lead-ui";
 import { Badge, DataTable, inputCls, td, th } from "./ui";
@@ -58,7 +59,7 @@ export default function LeadsTable({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulk, setBulk] = useState("status");
   const allSelected = leads.length > 0 && selected.size === leads.length;
-  const now = Date.now();
+  const now = nowMs();
 
   const toggle = (id: string) =>
     setSelected((s) => {

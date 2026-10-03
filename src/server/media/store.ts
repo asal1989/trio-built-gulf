@@ -21,7 +21,7 @@ export async function saveMediaFile(
   if (!checked.ok) throw new Error(checked.error);
 
   let buffer = checked.buffer;
-  let mime = checked.detected.mime;
+  const mime = checked.detected.mime;
   let ext = checked.detected.ext;
   let width: number | undefined;
   let height: number | undefined;

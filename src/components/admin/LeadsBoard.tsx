@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useOptimistic, useState, useTransition } from "react";
 import { LEAD_STATUS_LABELS, LEAD_STATUS_ORDER } from "@/lib/enquiry-options";
+import { nowMs } from "@/lib/time";
 import { moveLead } from "@/app/admin/(panel)/leads/actions";
 import { useToast } from "./forms";
 import { leadCode, STATUS_TONE, waDigits } from "./lead-ui";
@@ -67,7 +68,7 @@ export default function LeadsBoard({
     });
   };
 
-  const now = Date.now();
+  const now = nowMs();
 
   return (
     <div className="-mx-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">

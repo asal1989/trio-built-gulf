@@ -84,13 +84,13 @@ export function Donut({ data, empty = "No data yet" }: { data: Datum[]; empty?: 
   if (total === 0) return <p className="py-8 text-center text-sm text-navy/45">{empty}</p>;
   const R = 54;
   const C = 2 * Math.PI * R;
-  let offset = 0;
+  const starts = data.map((_, i) => data.slice(0, i).reduce((sum, d) => sum + (d.value / total) * C, 0));
   return (
     <div className="flex flex-col items-center gap-5 sm:flex-row">
       <svg viewBox="0 0 140 140" role="img" aria-label="Donut chart" className="h-36 w-36 shrink-0 -rotate-90">
         {data.map((d, i) => {
           const len = (d.value / total) * C;
-          const el = (
+          return (
             <circle
               key={d.label}
               cx="70"
@@ -100,11 +100,9 @@ export function Donut({ data, empty = "No data yet" }: { data: Datum[]; empty?: 
               stroke={PALETTE[i % PALETTE.length]}
               strokeWidth="22"
               strokeDasharray={`${len} ${C - len}`}
-              strokeDashoffset={-offset}
+              strokeDashoffset={-starts[i]}
             />
           );
-          offset += len;
-          return el;
         })}
       </svg>
       <ul className="min-w-0 flex-1 space-y-1.5 text-xs">

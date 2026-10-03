@@ -6,6 +6,7 @@ import { LEAD_STATUS_LABELS, LEAD_STATUS_ORDER } from "@/lib/enquiry-options";
 import { requirePage } from "@/server/auth/guard";
 import { can } from "@/server/auth/permissions";
 import { loadDashboard } from "@/server/dashboard";
+import { nowMs } from "@/lib/time";
 
 const STAGE_TONE: Record<string, string> = {
   NEW: "#3b82f6",
@@ -79,7 +80,7 @@ export default async function DashboardPage() {
             ) : (
               <ul className="divide-y divide-line/70">
                 {d.followUps.map((f) => {
-                  const overdue = f.dueAt.getTime() < Date.now();
+                  const overdue = f.dueAt.getTime() < nowMs();
                   return (
                     <li key={f.id} className="flex items-start justify-between gap-3 py-3 text-sm">
                       <div className="min-w-0">

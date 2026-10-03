@@ -4,6 +4,7 @@ import { PageHeading } from "@/components/admin/ui";
 import { requirePage } from "@/server/auth/guard";
 import { db } from "@/server/db";
 import { getCrmSettings } from "@/server/settings";
+import { nowMs } from "@/lib/time";
 
 export default async function NewQuotationPage({ searchParams }: { searchParams: Promise<{ leadId?: string }> }) {
   await requirePage("quote:manage");
@@ -11,7 +12,7 @@ export default async function NewQuotationPage({ searchParams }: { searchParams:
   const crm = await getCrmSettings();
   const lead = leadId ? await db.lead.findUnique({ where: { id: leadId } }) : null;
 
-  const valid = new Date(Date.now() + crm.quoteValidityDays * 86400_000 + 4 * 3600_000);
+  const valid = new Date(nowMs() + crm.quoteValidityDays * 86400_000 + 4 * 3600_000);
   const initial: EditorQuote = {
     leadId: lead?.id,
     customerName: lead?.name ?? "",

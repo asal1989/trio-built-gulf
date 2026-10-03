@@ -207,15 +207,16 @@ export function Modal({
   triggerClassName?: string;
   wide?: boolean;
 }) {
-  const dialog = useRef<HTMLDialogElement>(null);
-  const close = () => dialog.current?.close();
+  // The dialog element lives in state (callback ref) so `close` is plain render-safe data.
+  const [dialog, setDialog] = useState<HTMLDialogElement | null>(null);
+  const close = () => dialog?.close();
   return (
     <>
-      <button type="button" onClick={() => dialog.current?.showModal()} className={triggerClassName ?? button("secondary", true)}>
+      <button type="button" onClick={() => dialog?.showModal()} className={triggerClassName ?? button("secondary", true)}>
         {trigger}
       </button>
       <dialog
-        ref={dialog}
+        ref={setDialog}
         className={`${wide ? "w-[min(94vw,42rem)]" : "w-[min(92vw,30rem)]"} max-h-[90vh] overflow-y-auto rounded-xl border border-line bg-white p-0 text-navy shadow-2xl backdrop:bg-navy-950/50`}
       >
         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">

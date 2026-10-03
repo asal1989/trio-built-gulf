@@ -4,6 +4,7 @@ import { requirePage } from "@/server/auth/guard";
 import { can } from "@/server/auth/permissions";
 import { db } from "@/server/db";
 import { staffForAssignment } from "@/server/leads/queries";
+import { nowMs } from "@/lib/time";
 import { ConfirmForm } from "@/components/admin/forms";
 import { deleteLead } from "../actions";
 import {
@@ -59,7 +60,7 @@ export default async function LeadProfilePage({ params }: { params: Promise<{ id
   const canEdit = can(user, "lead:edit");
   const open = lead.followUps.filter((f) => !f.completedAt);
   const done = lead.followUps.filter((f) => f.completedAt);
-  const now = Date.now();
+  const now = nowMs();
 
   const detail = (label: string, value: React.ReactNode) =>
     value ? (

@@ -34,7 +34,6 @@ function PickerDialog({
 
   useEffect(() => {
     if (!open) return;
-    setSelected(new Map());
     const t = setTimeout(async () => {
       setLoading(true);
       try {
@@ -47,10 +46,15 @@ function PickerDialog({
     return () => clearTimeout(t);
   }, [open, q]);
 
+  const finish = () => {
+    setSelected(new Map());
+    onClose();
+  };
+
   const toggle = (m: Feed) => {
     if (!multiple) {
       onPick([m]);
-      onClose();
+      finish();
       return;
     }
     setSelected((cur) => {
@@ -64,12 +68,12 @@ function PickerDialog({
   return (
     <dialog
       ref={ref}
-      onClose={onClose}
+      onClose={finish}
       className="w-[min(96vw,56rem)] max-h-[90vh] overflow-hidden rounded-xl border border-line bg-white p-0 text-navy shadow-2xl backdrop:bg-navy-950/50"
     >
       <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3.5">
         <h3 className="font-display text-base font-bold">Choose from media library</h3>
-        <button type="button" onClick={onClose} aria-label="Close" className="rounded p-1 text-navy/50 hover:bg-mist">
+        <button type="button" onClick={finish} aria-label="Close" className="rounded p-1 text-navy/50 hover:bg-mist">
           ✕
         </button>
       </div>
@@ -110,7 +114,7 @@ function PickerDialog({
             disabled={selected.size === 0}
             onClick={() => {
               onPick([...selected.values()]);
-              onClose();
+              finish();
             }}
             className={button("teal")}
           >
