@@ -72,10 +72,11 @@ export default function Hero() {
         </p>
 
         <h1 className="animate-fade-up mt-5 max-w-5xl text-[clamp(2.25rem,6.4vw,5rem)] font-extrabold uppercase leading-[1] text-white [animation-delay:320ms]">
-          MEP, HVAC &amp; Building
+          Civil Works,
           <br />
-          Technical Services
-          <span className="block text-teal-300">in Dubai</span>
+          Fit-Out Works,
+          <br />
+          MEP, HVAC <span className="text-teal-300">in Dubai</span>
         </h1>
 
         <p className="animate-fade-up mt-8 max-w-2xl text-pretty text-base leading-relaxed text-white/70 [animation-delay:440ms] sm:text-lg">
