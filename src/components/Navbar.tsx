@@ -90,7 +90,7 @@ export default function Navbar() {
                     <Link
                       href={link.href}
                       aria-current={active ? "page" : undefined}
-                      className={`group relative block whitespace-nowrap px-2.5 py-2 font-display text-[13px] font-extrabold uppercase tracking-[0.08em] transition-colors duration-300 xl:px-4 xl:text-[15px] xl:tracking-[0.12em] ${
+                      className={`group relative block whitespace-nowrap px-2 py-2 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] transition-colors duration-300 xl:px-3 xl:text-[14px] xl:tracking-[0.1em] 2xl:px-4 2xl:text-[15px] 2xl:tracking-[0.12em] ${
                         active ? "text-teal-700" : "text-navy hover:text-teal-700"
                       }`}
                     >
